@@ -1,3 +1,0 @@
-D:/Study/ftl_11_grade/Management-Of-Foreign-Language-Courses/build/CMakeFiles/Languages.dir
-D:/Study/ftl_11_grade/Management-Of-Foreign-Language-Courses/build/CMakeFiles/edit_cache.dir
-D:/Study/ftl_11_grade/Management-Of-Foreign-Language-Courses/build/CMakeFiles/rebuild_cache.dir
