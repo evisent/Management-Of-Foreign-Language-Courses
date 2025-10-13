@@ -8,8 +8,14 @@ std::string Student::get_name() const {
     return name_;
 }
 
-void Student::get_languages() const{
+const std::vector<std::unique_ptr<Language>>& Student::get_languages() const {
+    return languages_;
+}
+
+
+void Student::get_info() const {
     for (int i = 0; i < languages_.size(); ++i){
-        std::cout << languages_[i]->get_name() << " level is " << languages_[i]->get_level() << " intensity is " << languages_[i]->get_intensity() << std::endl;
+        std::cout << name_ << ": " << languages_[i]->get_name() << ", level is " << languages_[i]->get_level() << ", periods left " 
+        << languages_[i]->get_intensity().get_period() << ", price is " << languages_[i]->get_price() << std::endl;
     }
 }

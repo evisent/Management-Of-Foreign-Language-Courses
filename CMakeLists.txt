@@ -7,4 +7,5 @@ add_executable(Languages
     src/main.cpp
     src/student.cpp    
     src/languages.cpp
+    src/intensity.cpp
 )

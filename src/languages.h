@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "intensity.h"
 
 class Language{
 public:
@@ -12,8 +13,8 @@ public:
     virtual void set_level(int level);
     virtual int get_level() const;
 
-    virtual void set_intensity(int intensity);
-    virtual int get_intensity() const;
+    virtual void set_intensity(Intensity intensity);
+    virtual Intensity get_intensity() const;
 
     virtual ~Language() = default;
 
@@ -21,27 +22,41 @@ private:
     int price_;
     std::string name_;
     int level_;
-    int intensity_;
+    Intensity intensity_;
 };
 
 class English: public Language{
 public:
-    English();
-    English(int level, int intensity);
+    English(int level, Intensity intensity);
 private:
 };
 
 class Spanish: public Language{
 public:
-    Spanish();
-    Spanish(int level, int intensity);
+    Spanish(int level, Intensity intensity);
 private:
 };
 
 class Chinese: public Language{
 public:
-    Chinese();
-    Chinese(int level, int intensity);
+    Chinese(int level, Intensity intensity);
 private:
+};
 
+class German: public Language{
+public:
+    German(int level, Intensity intensity);
+private:
+};
+
+class French: public Language{
+public:
+    French(int level, Intensity intensity);
+private:
+};
+
+class Arabian: public Language{
+public:
+    Arabian(int level, Intensity intensity);
+private:
 };

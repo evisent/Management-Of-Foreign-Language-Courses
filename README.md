@@ -1,1 +1,1 @@
-# Management-Of-Foreign-Language-Cources
+# Management-Of-Foreign-Language-Courses
