@@ -1,9 +1,7 @@
 #include "group_manager.h"
 #include "languages.h"
 #include "student.h"
-#include <map>
-#include <vector>
-#include <iostream>
+#include "json_utils.h"
 
 void GroupManager::add_student(Student& student){
     for (const auto& language : student.get_languages()) {
@@ -60,4 +58,48 @@ void GroupManager::print_all() const {
             }
         }
     }
+}
+
+std::string GroupManager::get_groups_json() const {
+    std::string json_body = "{\"groups\":[";
+    
+    bool first_group = true;
+    int group_count = 0;
+    
+    for (const auto& [language, levels] : groups) {   
+        for (const auto& [level, intensities] : levels) {
+            for (const auto& [intensity, students] : intensities) {
+                if (!students.empty()) {
+                    group_count++;
+                    if (!first_group) {
+                        json_body += ",";
+                    }
+                    first_group = false;
+                    
+                    json_body += "{";
+                    json_body += "\"language\":\"" + JsonEscape(language) + "\",";
+                    json_body += "\"level\":" + std::to_string(level) + ",";
+                    json_body += "\"intensity\":" + std::to_string(intensity.get_period()) + ",";
+                    json_body += "\"students\":[";
+                    
+                    bool first_student = true;
+                    for (const auto& student : students) {
+                        if (!first_student) json_body += ",";
+                        first_student = false;
+                        json_body += "\"" + JsonEscape(student->get_name()) + "\"";
+                    }
+                    
+                    json_body += "]}";
+                }
+            }
+        }
+    }
+    
+    json_body += "]}";
+    std::cout << "DEBUG: Generated JSON for " << group_count << " groups" << std::endl;
+    return json_body;
+}
+
+void GroupManager::reset() {
+    groups.clear();  
 }

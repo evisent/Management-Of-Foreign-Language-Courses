@@ -1,24 +1,11 @@
 #include "httplib.h"
 #include "group_manager.h"
 #include "randoms.h"
+#include "json_utils.h"
 #include <vector>
 #include <memory>
 
-static std::string JsonEscape(const std::string& s) {
-  std::string result;
-  result.reserve(s.size() + 8);
-  for (char c : s) {
-    switch (c) {
-      case '\"': result += "\\\""; break;
-      case '\\': result += "\\\\"; break;
-      case '\n': result += "\\n"; break;
-      case '\r': result += "\\r"; break;
-      case '\t': result += "\\t"; break;
-      default: result += c;
-    }
-  }
-  return result;
-}
+
 
 GroupManager manager;
 std::vector<std::unique_ptr<Student>> students;
@@ -71,18 +58,17 @@ int main() {
 
     // Get groups endpoint
     server.Get("/groups", [](const httplib::Request&, httplib::Response& res) {
-        // TODO: Реализовать получение групп в JSON формате
-        std::string json_body = "{\"groups\":[]}";
+        std::string json_body = manager.get_groups_json();
         res.set_content(json_body, "application/json; charset=utf-8");
     });
 
     // Reset school endpoint
     server.Post("/reset", [](const httplib::Request&, httplib::Response& res) {
         students.clear();
-        // TODO: Reset manager
+        manager.reset();  //
         res.set_content("{\"reset\":true}", "application/json");
     });
-
+    
     // Serve static files
     server.set_mount_point("/", "./www");
 
