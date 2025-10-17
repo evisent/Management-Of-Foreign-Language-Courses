@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    background: #1a1a1a;
+    color: #00ff00;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    border: 2px solid #00ff00;
+    padding: 20px;
+    background: #0a0a0a;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 2.5em;
+    text-shadow: 0 0 10px #00ff00;
+    margin-bottom: 10px;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+button {
+    background: #003300;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 10px 20px;
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background: #006600;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    border: 1px solid #00ff00;
+    padding: 15px;
+    text-align: center;
+    background: #002200;
+}
+
+.stat-number {
+    font-size: 2em;
+    font-weight: bold;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: #00cc00;
+}
+
+.output {
+    border: 1px solid #00ff00;
+    padding: 20px;
+    background: #001100;
+    min-height: 200px;
+    margin-bottom: 20px;
+    white-space: pre-wrap;
+    font-family: 'Courier New', monospace;
+}
+
+.groups-container {
+    border: 1px solid #00ff00;
+    padding: 20px;
+    background: #001100;
+}
+
+.group-card {
+    border: 1px solid #00cc00;
+    padding: 15px;
+    margin: 10px 0;
+    background: #002200;
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #00cc00;
+    padding-bottom: 5px;
+}
+
+.student-item {
+    padding: 5px;
+    margin: 2px 0;
+    background: #003300;
+    border-left: 3px solid #00ff00;
+}
+
+.status {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #00ff00;
+    margin: 10px 0;
+    background: #002200;
+}
+
+@media (max-width: 600px) {
+    .controls {
+        flex-direction: column;
+    }
+    
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}

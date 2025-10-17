@@ -12,5 +12,5 @@ public:
 
 private:
     int period_; // amount of 2-week periods
-    int days_;   // amount of lessons per week
+    int days_;   // amount of lessons per period
 };

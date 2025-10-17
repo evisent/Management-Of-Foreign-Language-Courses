@@ -1,54 +1,94 @@
-#include <iostream>
+#include "httplib.h"
+#include "group_manager.h"
+#include "randoms.h"
 #include <vector>
 #include <memory>
-#include "languages.h"
-#include "student.h"
-#include "group_manager.h"
+
+static std::string JsonEscape(const std::string& s) {
+  std::string result;
+  result.reserve(s.size() + 8);
+  for (char c : s) {
+    switch (c) {
+      case '\"': result += "\\\""; break;
+      case '\\': result += "\\\\"; break;
+      case '\n': result += "\\n"; break;
+      case '\r': result += "\\r"; break;
+      case '\t': result += "\\t"; break;
+      default: result += c;
+    }
+  }
+  return result;
+}
+
+GroupManager manager;
+std::vector<std::unique_ptr<Student>> students;
 
 int main() {
+    httplib::Server server;
 
-    std::vector<std::unique_ptr<Language>> student1_langs; // vector of languages for one student
-    student1_langs.push_back(std::make_unique<English>(1, Intensity(3)));  // english, level 1, intensity 3
-    student1_langs.push_back(std::make_unique<French>(2, Intensity(2)));   // french, level 2, intensity 2
-    
-    std::vector<std::unique_ptr<Language>> student2_langs;
-    student2_langs.push_back(std::make_unique<English>(1, Intensity(3)));  // english, level 1, intensity 3
-    student2_langs.push_back(std::make_unique<German>(1, Intensity(1)));   // german, level 1, intensity 1
-    
-    std::vector<std::unique_ptr<Language>> student3_langs;
-    student3_langs.push_back(std::make_unique<French>(2, Intensity(1)));   // french, level 2, intensity 1
-    student3_langs.push_back(std::make_unique<Chinese>(3, Intensity(3)));  // chinese, level 3, intensity 3
+    server.set_default_headers({
+        {"Access-Control-Allow-Origin", "*"},
+        {"Access-Control-Allow-Headers", "Content-Type"},
+        {"Access-Control-Allow-Methods", "GET,POST,OPTIONS"},
+    });
 
-    std::vector<std::unique_ptr<Language>> student4_langs;
-    student4_langs.push_back(std::make_unique<English>(1, Intensity(3)));  // english, level 1, intensity 3
-    student4_langs.push_back(std::make_unique<Spanish>(2, Intensity(2)));  // spanish, level 2, intensity 2
+    server.Options(R"(.*)", [](const httplib::Request& req, httplib::Response& res) {
+        res.status = 200;
+    });
 
-    Student student1("Alice", std::move(student1_langs));
-    Student student2("Bob", std::move(student2_langs));
-    Student student3("Charlie", std::move(student3_langs));
-    Student student4("Diana", std::move(student4_langs));
+    // Static files
+    server.Get("/", [](const httplib::Request&, httplib::Response& res) {
+        res.set_content("<meta http-equiv='refresh' content='0; url=/index.html'>",
+                        "text/html");
+    });
 
-    GroupManager manager;               // group manager, sorts by groups
-    manager.add_student(student1);
-    manager.add_student(student2);
-    manager.add_student(student3);
-    manager.add_student(student4);
+    // School state endpoint
+    server.Get("/state", [](const httplib::Request&, httplib::Response& res) {
+        int total_students = students.size();
+        
+        // TODO: Добавить получение реальных данных о группах
+        int total_groups = 0;
+        std::string last_action = "System initialized";
+        
+        std::string json_body = std::string("{") +
+            "\"students_count\":" + std::to_string(total_students) + "," +
+            "\"groups_count\":" + std::to_string(total_groups) + "," +
+            "\"last_action\":\"" + JsonEscape(last_action) + "\"," +
+            "\"status\":\"running\"" +
+            "}";
 
-    manager.print_all();
-    
-    std::vector<Student*> english_group = manager.get_group("English", 1, Intensity(3)); // find group (english, level 1, intensity 3)
-    std::cout << "English, level 1, intensity 3 group has " << english_group.size() << " students:" << std::endl;
-    for (const auto& student : english_group) {
-        std::cout << student->get_name() << std::endl;
-    }
-    std::cout << std::endl;
+        res.set_content(json_body, "application/json; charset=utf-8");
+    });
 
-    std::vector<Student*> french_group = manager.get_group("French", 2, Intensity(2));
-    std::cout << "French, level 2, intensity 2 group has " << french_group.size() << " students:" << std::endl;
-    for (const auto& student : french_group) {
-        std::cout << student->get_name() << std::endl;
-    }
-    std::cout << std::endl;
+    // Create student endpoint
+    server.Post("/create_student", [](const httplib::Request& req, httplib::Response& res) {
+        auto student = std::make_unique<Student>(rand_name(), rand_languages());
+        manager.add_student(*student);
+        students.push_back(std::move(student));
+        
+        res.set_content("{\"created\":true}", "application/json");
+    });
 
+    // Get groups endpoint
+    server.Get("/groups", [](const httplib::Request&, httplib::Response& res) {
+        // TODO: Реализовать получение групп в JSON формате
+        std::string json_body = "{\"groups\":[]}";
+        res.set_content(json_body, "application/json; charset=utf-8");
+    });
+
+    // Reset school endpoint
+    server.Post("/reset", [](const httplib::Request&, httplib::Response& res) {
+        students.clear();
+        // TODO: Reset manager
+        res.set_content("{\"reset\":true}", "application/json");
+    });
+
+    // Serve static files
+    server.set_mount_point("/", "./www");
+
+    std::cout << "Language School Server running on http://0.0.0.0:8080\n";
+    server.listen("0.0.0.0", 8080);
     return 0;
 }
+
+// http://localhost:8080

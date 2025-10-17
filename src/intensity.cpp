@@ -3,13 +3,13 @@
 Intensity::Intensity(int type){
     if (type == 1){       
         period_ = 6;        // slow 
-        days_ = 2;   
+        days_ = 4;   
     } else if (type == 2){ 
         period_ = 4;        // regular
-        days_ = 3;    
+        days_ = 6;    
     } else{                
         period_ = 3;        // fast
-        days_ = 4;  
+        days_ = 8;  
     }
 };
 

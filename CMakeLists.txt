@@ -8,4 +8,8 @@ add_executable(Languages
     src/student.cpp    
     src/languages.cpp
     src/intensity.cpp
+    src/group_manager.cpp
 )
+
+# ЭТА СТРОКА ОБЯЗАТЕЛЬНА для сетевых программ на Windows
+target_link_libraries(Languages ws2_32 wsock32)

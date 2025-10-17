@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language School</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏫 LANGUAGE SCHOOL</h1>
+            <p>Management System v1.0</p>
+        </div>
+
+        <div class="controls">
+            <button onclick="createStudent()">🎓 CREATE STUDENT</button>
+            <button onclick="getState()">🔄 REFRESH STATE</button>
+            <button onclick="getGroups()">📚 SHOW GROUPS</button>
+            <button onclick="resetSchool()">🔄 RESET SCHOOL</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="studentsCount">0</div>
+                <div class="stat-label">STUDENTS</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="groupsCount">0</div>
+                <div class="stat-label">GROUPS</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="status">ONLINE</div>
+                <div class="stat-label">STATUS</div>
+            </div>
+        </div>
+
+        <div class="status" id="lastAction">
+            System initialized. Ready to create students.
+        </div>
+
+        <div class="output" id="output">
+            // Language School Terminal
+            // Use buttons to interact with the system
+        </div>
+
+        <div class="groups-container" id="groupsContainer" style="display: none;">
+            <h3>📚 STUDY GROUPS</h3>
+            <div id="groupsList"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
