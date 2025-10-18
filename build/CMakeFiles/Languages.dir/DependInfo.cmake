@@ -8,9 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "G:/ftl 11 grade/MOFLC/languages.cpp" "CMakeFiles/Languages.dir/languages.cpp.obj" "gcc" "CMakeFiles/Languages.dir/languages.cpp.obj.d"
-  "G:/ftl 11 grade/MOFLC/main.cpp" "CMakeFiles/Languages.dir/main.cpp.obj" "gcc" "CMakeFiles/Languages.dir/main.cpp.obj.d"
-  "G:/ftl 11 grade/MOFLC/student.cpp" "CMakeFiles/Languages.dir/student.cpp.obj" "gcc" "CMakeFiles/Languages.dir/student.cpp.obj.d"
+  "G:/ftl 11 grade/MOFLC/src/languages.cpp" "CMakeFiles/Languages.dir/src/languages.cpp.obj" "gcc" "CMakeFiles/Languages.dir/src/languages.cpp.obj.d"
+  "G:/ftl 11 grade/MOFLC/src/main.cpp" "CMakeFiles/Languages.dir/src/main.cpp.obj" "gcc" "CMakeFiles/Languages.dir/src/main.cpp.obj.d"
+  "G:/ftl 11 grade/MOFLC/src/student.cpp" "CMakeFiles/Languages.dir/src/student.cpp.obj" "gcc" "CMakeFiles/Languages.dir/src/student.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

@@ -68,60 +68,60 @@ include CMakeFiles/Languages.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Languages.dir/flags.make
 
-CMakeFiles/Languages.dir/main.cpp.obj: CMakeFiles/Languages.dir/flags.make
-CMakeFiles/Languages.dir/main.cpp.obj: G:/ftl\ 11\ grade/MOFLC/main.cpp
-CMakeFiles/Languages.dir/main.cpp.obj: CMakeFiles/Languages.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="G:\ftl 11 grade\MOFLC\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Languages.dir/main.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Languages.dir/main.cpp.obj -MF CMakeFiles\Languages.dir\main.cpp.obj.d -o CMakeFiles\Languages.dir\main.cpp.obj -c "G:\ftl 11 grade\MOFLC\main.cpp"
+CMakeFiles/Languages.dir/src/main.cpp.obj: CMakeFiles/Languages.dir/flags.make
+CMakeFiles/Languages.dir/src/main.cpp.obj: G:/ftl\ 11\ grade/MOFLC/src/main.cpp
+CMakeFiles/Languages.dir/src/main.cpp.obj: CMakeFiles/Languages.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="G:\ftl 11 grade\MOFLC\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Languages.dir/src/main.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Languages.dir/src/main.cpp.obj -MF CMakeFiles\Languages.dir\src\main.cpp.obj.d -o CMakeFiles\Languages.dir\src\main.cpp.obj -c "G:\ftl 11 grade\MOFLC\src\main.cpp"
 
-CMakeFiles/Languages.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Languages.dir/main.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "G:\ftl 11 grade\MOFLC\main.cpp" > CMakeFiles\Languages.dir\main.cpp.i
+CMakeFiles/Languages.dir/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Languages.dir/src/main.cpp.i"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "G:\ftl 11 grade\MOFLC\src\main.cpp" > CMakeFiles\Languages.dir\src\main.cpp.i
 
-CMakeFiles/Languages.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Languages.dir/main.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "G:\ftl 11 grade\MOFLC\main.cpp" -o CMakeFiles\Languages.dir\main.cpp.s
+CMakeFiles/Languages.dir/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Languages.dir/src/main.cpp.s"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "G:\ftl 11 grade\MOFLC\src\main.cpp" -o CMakeFiles\Languages.dir\src\main.cpp.s
 
-CMakeFiles/Languages.dir/student.cpp.obj: CMakeFiles/Languages.dir/flags.make
-CMakeFiles/Languages.dir/student.cpp.obj: G:/ftl\ 11\ grade/MOFLC/student.cpp
-CMakeFiles/Languages.dir/student.cpp.obj: CMakeFiles/Languages.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="G:\ftl 11 grade\MOFLC\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Languages.dir/student.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Languages.dir/student.cpp.obj -MF CMakeFiles\Languages.dir\student.cpp.obj.d -o CMakeFiles\Languages.dir\student.cpp.obj -c "G:\ftl 11 grade\MOFLC\student.cpp"
+CMakeFiles/Languages.dir/src/student.cpp.obj: CMakeFiles/Languages.dir/flags.make
+CMakeFiles/Languages.dir/src/student.cpp.obj: G:/ftl\ 11\ grade/MOFLC/src/student.cpp
+CMakeFiles/Languages.dir/src/student.cpp.obj: CMakeFiles/Languages.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="G:\ftl 11 grade\MOFLC\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Languages.dir/src/student.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Languages.dir/src/student.cpp.obj -MF CMakeFiles\Languages.dir\src\student.cpp.obj.d -o CMakeFiles\Languages.dir\src\student.cpp.obj -c "G:\ftl 11 grade\MOFLC\src\student.cpp"
 
-CMakeFiles/Languages.dir/student.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Languages.dir/student.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "G:\ftl 11 grade\MOFLC\student.cpp" > CMakeFiles\Languages.dir\student.cpp.i
+CMakeFiles/Languages.dir/src/student.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Languages.dir/src/student.cpp.i"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "G:\ftl 11 grade\MOFLC\src\student.cpp" > CMakeFiles\Languages.dir\src\student.cpp.i
 
-CMakeFiles/Languages.dir/student.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Languages.dir/student.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "G:\ftl 11 grade\MOFLC\student.cpp" -o CMakeFiles\Languages.dir\student.cpp.s
+CMakeFiles/Languages.dir/src/student.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Languages.dir/src/student.cpp.s"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "G:\ftl 11 grade\MOFLC\src\student.cpp" -o CMakeFiles\Languages.dir\src\student.cpp.s
 
-CMakeFiles/Languages.dir/languages.cpp.obj: CMakeFiles/Languages.dir/flags.make
-CMakeFiles/Languages.dir/languages.cpp.obj: G:/ftl\ 11\ grade/MOFLC/languages.cpp
-CMakeFiles/Languages.dir/languages.cpp.obj: CMakeFiles/Languages.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="G:\ftl 11 grade\MOFLC\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Languages.dir/languages.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Languages.dir/languages.cpp.obj -MF CMakeFiles\Languages.dir\languages.cpp.obj.d -o CMakeFiles\Languages.dir\languages.cpp.obj -c "G:\ftl 11 grade\MOFLC\languages.cpp"
+CMakeFiles/Languages.dir/src/languages.cpp.obj: CMakeFiles/Languages.dir/flags.make
+CMakeFiles/Languages.dir/src/languages.cpp.obj: G:/ftl\ 11\ grade/MOFLC/src/languages.cpp
+CMakeFiles/Languages.dir/src/languages.cpp.obj: CMakeFiles/Languages.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="G:\ftl 11 grade\MOFLC\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Languages.dir/src/languages.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Languages.dir/src/languages.cpp.obj -MF CMakeFiles\Languages.dir\src\languages.cpp.obj.d -o CMakeFiles\Languages.dir\src\languages.cpp.obj -c "G:\ftl 11 grade\MOFLC\src\languages.cpp"
 
-CMakeFiles/Languages.dir/languages.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Languages.dir/languages.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "G:\ftl 11 grade\MOFLC\languages.cpp" > CMakeFiles\Languages.dir\languages.cpp.i
+CMakeFiles/Languages.dir/src/languages.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Languages.dir/src/languages.cpp.i"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "G:\ftl 11 grade\MOFLC\src\languages.cpp" > CMakeFiles\Languages.dir\src\languages.cpp.i
 
-CMakeFiles/Languages.dir/languages.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Languages.dir/languages.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "G:\ftl 11 grade\MOFLC\languages.cpp" -o CMakeFiles\Languages.dir\languages.cpp.s
+CMakeFiles/Languages.dir/src/languages.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Languages.dir/src/languages.cpp.s"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "G:\ftl 11 grade\MOFLC\src\languages.cpp" -o CMakeFiles\Languages.dir\src\languages.cpp.s
 
 # Object files for target Languages
 Languages_OBJECTS = \
-"CMakeFiles/Languages.dir/main.cpp.obj" \
-"CMakeFiles/Languages.dir/student.cpp.obj" \
-"CMakeFiles/Languages.dir/languages.cpp.obj"
+"CMakeFiles/Languages.dir/src/main.cpp.obj" \
+"CMakeFiles/Languages.dir/src/student.cpp.obj" \
+"CMakeFiles/Languages.dir/src/languages.cpp.obj"
 
 # External object files for target Languages
 Languages_EXTERNAL_OBJECTS =
 
-Languages.exe: CMakeFiles/Languages.dir/main.cpp.obj
-Languages.exe: CMakeFiles/Languages.dir/student.cpp.obj
-Languages.exe: CMakeFiles/Languages.dir/languages.cpp.obj
+Languages.exe: CMakeFiles/Languages.dir/src/main.cpp.obj
+Languages.exe: CMakeFiles/Languages.dir/src/student.cpp.obj
+Languages.exe: CMakeFiles/Languages.dir/src/languages.cpp.obj
 Languages.exe: CMakeFiles/Languages.dir/build.make
 Languages.exe: CMakeFiles/Languages.dir/linkLibs.rsp
 Languages.exe: CMakeFiles/Languages.dir/objects1.rsp

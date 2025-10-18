@@ -128,77 +128,77 @@ Languages/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/build
 .PHONY : Languages/fast
 
-languages.obj: languages.cpp.obj
-.PHONY : languages.obj
+src/languages.obj: src/languages.cpp.obj
+.PHONY : src/languages.obj
 
 # target to build an object file
-languages.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/languages.cpp.obj
-.PHONY : languages.cpp.obj
+src/languages.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/languages.cpp.obj
+.PHONY : src/languages.cpp.obj
 
-languages.i: languages.cpp.i
-.PHONY : languages.i
+src/languages.i: src/languages.cpp.i
+.PHONY : src/languages.i
 
 # target to preprocess a source file
-languages.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/languages.cpp.i
-.PHONY : languages.cpp.i
+src/languages.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/languages.cpp.i
+.PHONY : src/languages.cpp.i
 
-languages.s: languages.cpp.s
-.PHONY : languages.s
+src/languages.s: src/languages.cpp.s
+.PHONY : src/languages.s
 
 # target to generate assembly for a file
-languages.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/languages.cpp.s
-.PHONY : languages.cpp.s
+src/languages.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/languages.cpp.s
+.PHONY : src/languages.cpp.s
 
-main.obj: main.cpp.obj
-.PHONY : main.obj
+src/main.obj: src/main.cpp.obj
+.PHONY : src/main.obj
 
 # target to build an object file
-main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/main.cpp.obj
-.PHONY : main.cpp.obj
+src/main.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/main.cpp.obj
+.PHONY : src/main.cpp.obj
 
-main.i: main.cpp.i
-.PHONY : main.i
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/main.cpp.i
-.PHONY : main.cpp.i
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/main.cpp.s
-.PHONY : main.cpp.s
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
 
-student.obj: student.cpp.obj
-.PHONY : student.obj
+src/student.obj: src/student.cpp.obj
+.PHONY : src/student.obj
 
 # target to build an object file
-student.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/student.cpp.obj
-.PHONY : student.cpp.obj
+src/student.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/student.cpp.obj
+.PHONY : src/student.cpp.obj
 
-student.i: student.cpp.i
-.PHONY : student.i
+src/student.i: src/student.cpp.i
+.PHONY : src/student.i
 
 # target to preprocess a source file
-student.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/student.cpp.i
-.PHONY : student.cpp.i
+src/student.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/student.cpp.i
+.PHONY : src/student.cpp.i
 
-student.s: student.cpp.s
-.PHONY : student.s
+src/student.s: src/student.cpp.s
+.PHONY : src/student.s
 
 # target to generate assembly for a file
-student.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/student.cpp.s
-.PHONY : student.cpp.s
+src/student.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/student.cpp.s
+.PHONY : src/student.cpp.s
 
 # Help Target
 help:
@@ -209,15 +209,15 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... Languages
-	@echo ... languages.obj
-	@echo ... languages.i
-	@echo ... languages.s
-	@echo ... main.obj
-	@echo ... main.i
-	@echo ... main.s
-	@echo ... student.obj
-	@echo ... student.i
-	@echo ... student.s
+	@echo ... src/languages.obj
+	@echo ... src/languages.i
+	@echo ... src/languages.s
+	@echo ... src/main.obj
+	@echo ... src/main.i
+	@echo ... src/main.s
+	@echo ... src/student.obj
+	@echo ... src/student.i
+	@echo ... src/student.s
 .PHONY : help
 
 
