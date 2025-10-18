@@ -1,7 +1,8 @@
 #include"languages.h"
 
-
-int ENGLISHPRICE = 1000, SPANISHPRICE = 2000;
+int ENGLISHPRICE = 18000, SPANISHPRICE = 24000, CHINESEPRICE = 36000, 
+GERMANPRICE = 30000, FRENCHPRICE = 27000, ARABIANPRICE = 33000,
+INDIVIDUALPRICE = 6000;
 
 void Language::set_price(int price){
     price_ = price;
@@ -11,7 +12,7 @@ int Language::get_price() const {
     return price_;
 }
 
-void Language::set_name(std::string name){
+void Language::set_name(const std::string& name){
     name_ = name;
 }
 
@@ -27,44 +28,76 @@ int Language::get_level() const {
     return level_;
 }
 
-void Language::set_intensity(int intensity){
+void Language::set_intensity(const Intensity& intensity){
     intensity_ = intensity;
 }
 
-int Language::get_intensity() const {
+Intensity Language::get_intensity() const{
     return intensity_;
 }
 
-English::English(){
-    set_price(ENGLISHPRICE);
-    set_name("English");
-};
-
-English::English(int level, int intensity){
-    set_price(ENGLISHPRICE);
+English::English(int level, const Intensity& intensity){
+    set_price(ENGLISHPRICE / intensity.get_period());
     set_name("English");
     set_level(level);
     set_intensity(intensity);
 }
 
-Spanish::Spanish(){
-    set_price(SPANISHPRICE);
-    set_name("Spanish");
-};
+void English::set_individual_price(){
+    set_price((ENGLISHPRICE + INDIVIDUALPRICE) / get_intensity().get_period());
+}
 
-Spanish::Spanish(int level, int intensity){
-    set_price(SPANISHPRICE);
+Spanish::Spanish(int level, const Intensity& intensity){
+    set_price(SPANISHPRICE / intensity.get_period());
     set_name("Spanish");
     set_level(level);
     set_intensity(intensity);
 }
 
-Chinese::Chinese(){
-    set_name("Chinese");
+void Spanish::set_individual_price(){
+    set_price((SPANISHPRICE + INDIVIDUALPRICE) / get_intensity().get_period());
 }
 
-Chinese::Chinese(int level, int intensity){
+Chinese::Chinese(int level, const Intensity& intensity){
+    set_price(CHINESEPRICE / intensity.get_period());
     set_name("Chinese");
     set_level(level);
     set_intensity(intensity);
+}
+
+void Chinese::set_individual_price(){
+    set_price((CHINESEPRICE + INDIVIDUALPRICE) / get_intensity().get_period());
+}
+
+German::German(int level, const Intensity& intensity){
+    set_price(GERMANPRICE / intensity.get_period());
+    set_name("German");
+    set_level(level);
+    set_intensity(intensity);
+}
+
+void German::set_individual_price(){
+    set_price((GERMANPRICE + INDIVIDUALPRICE) / get_intensity().get_period());
+}
+
+French::French(int level, const Intensity& intensity){
+    set_price(FRENCHPRICE / intensity.get_period());
+    set_name("French");
+    set_level(level);
+    set_intensity(intensity);
+}
+
+void French::set_individual_price(){
+    set_price((FRENCHPRICE + INDIVIDUALPRICE) / get_intensity().get_period());
+}
+
+Arabian::Arabian(int level, const Intensity& intensity){
+    set_price(ARABIANPRICE / intensity.get_period());
+    set_name("Arabian");
+    set_level(level);
+    set_intensity(intensity);
+}
+
+void Arabian::set_individual_price(){
+    set_price((ARABIANPRICE + INDIVIDUALPRICE) / get_intensity().get_period());
 }

@@ -1,3 +1,0 @@
-G:/ftl 11 grade/MOFLC/build/CMakeFiles/Languages.dir
-G:/ftl 11 grade/MOFLC/build/CMakeFiles/edit_cache.dir
-G:/ftl 11 grade/MOFLC/build/CMakeFiles/rebuild_cache.dir

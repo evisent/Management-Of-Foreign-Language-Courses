@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Managment Of Foreign Language Courses</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="initModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎓 Инициализация системы языковых курсов</h2>
+            </div>
+            
+            <div class="modal-body">
+                <div class="init-options">
+                    <div class="option-card" onclick="selectOption('auto')">
+                        <div class="option-icon">🎲</div>
+                        <h3>Случайные студенты</h3>
+                        <p>Система автоматически создаст 15 студентов со случайными параметрами</p>
+                        <div class="option-badge">Быстро</div>
+                    </div>
+                    
+                    <div class="option-card" onclick="selectOption('manual')">
+                        <div class="option-icon">✏️</div>
+                        <h3>Ручное создание</h3>
+                        <p>Вы самостоятельно настроите языки, уровни и интенсивность для каждого студента</p>
+                        <div class="option-badge">Точно</div>
+                    </div>
+                </div>
+
+                <!-- Форма для ручного создания -->
+                <div id="manualForm" class="manual-form" style="display: none;">
+                    <h3>Создание студентов</h3>
+                    <div class="students-grid" id="manualStudentsGrid">
+                        <!-- Студенты будут генерироваться здесь -->
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-outline" onclick="backToOptions()">← Назад</button>
+                        <button class="btn btn-primary" onclick="createManualStudents()">Создать студентов</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="app-container">
+        <!-- Левая панель -->
+        <div class="left-panel">
+            <header class="header">
+                <div class="header-content">
+                    <h1>🎓 Managment Of Foreign Language Courses</h1>
+                    <p>Model of system</p>
+                </div>
+            </header>
+
+            <div class="dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="studentsCount">0</div>
+                            <div class="stat-label">Студентов</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="groupsCount">0</div>
+                            <div class="stat-label">Групп</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-panel">
+                    <h3>Управление системой</h3>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="createStudent()">
+                            <span class="btn-icon">➕</span>
+                            Добавить студента
+                        </button>
+                        <button class="btn btn-warning" onclick="deleteStudent()">
+                            <span class="btn-icon">➖</span>
+                            Удалить студента
+                        </button>               
+                        <button class="btn btn-danger" onclick="resetSchool()">
+                            <span class="btn-icon">🗑️</span>
+                            Очистить всё
+                        </button>
+                    </div>
+                </div>  
+
+                <!-- Панель языков -->
+                <div class="languages-panel">
+                    <div class="panel-header">
+                        <h3>🌍 Языки и группы</h3>
+                    </div>
+                    <div class="languages-list" id="languagesList">
+                        <div class="empty-state">
+                            <div class="empty-icon">🌍</div>
+                            <h3>Языки не загружены</h3>
+                            <p>Нажмите "Загрузить языки" чтобы показать список</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="output-panel">
+                    <div class="panel-header">
+                        <h3>Журнал событий</h3>
+                        <button class="btn-sm" onclick="clearOutput()">Очистить</button>
+                    </div>
+                    <div class="output" id="output">
+                        Система запущена. Используйте кнопки для управления...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая панель (детали группы) -->
+        <div class="right-panel">
+            <div class="groups-header">
+                <h2>👥 Детали группы</h2>
+                <div class="groups-controls">
+                    <button class="btn btn-outline" onclick="clearSelection()">
+                        <span class="btn-icon">✖️</span>
+                        Очистить
+                    </button>
+                </div>
+            </div>
+            
+            <div class="group-details" id="groupDetails">
+                <div class="empty-state">
+                    <div class="empty-icon">👆</div>
+                    <h3>Выберите группу</h3>
+                    <p>Выберите язык или группу из списка слева чтобы увидеть детали</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

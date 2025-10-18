@@ -7,4 +7,13 @@ add_executable(Languages
     src/main.cpp
     src/student.cpp    
     src/languages.cpp
+    src/intensity.cpp
+    src/group_manager.cpp
 )
+
+# Универсальное связывание сетевых библиотек
+if(WIN32)
+    target_link_libraries(Languages ws2_32 wsock32)
+else()
+    target_link_libraries(Languages pthread)
+endif()

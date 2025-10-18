@@ -16,5 +16,17 @@
   "command": "C:\\msys64\\mingw64\\bin\\g++.exe   -g -std=gnu++17 -o CMakeFiles\\Languages.dir\\src\\languages.cpp.obj -c \"G:\\ftl 11 grade\\MOFLC\\src\\languages.cpp\"",
   "file": "G:/ftl 11 grade/MOFLC/src/languages.cpp",
   "output": "CMakeFiles/Languages.dir/src/languages.cpp.obj"
+},
+{
+  "directory": "G:/ftl 11 grade/MOFLC/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe   -g -std=gnu++17 -o CMakeFiles\\Languages.dir\\src\\intensity.cpp.obj -c \"G:\\ftl 11 grade\\MOFLC\\src\\intensity.cpp\"",
+  "file": "G:/ftl 11 grade/MOFLC/src/intensity.cpp",
+  "output": "CMakeFiles/Languages.dir/src/intensity.cpp.obj"
+},
+{
+  "directory": "G:/ftl 11 grade/MOFLC/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe   -g -std=gnu++17 -o CMakeFiles\\Languages.dir\\src\\group_manager.cpp.obj -c \"G:\\ftl 11 grade\\MOFLC\\src\\group_manager.cpp\"",
+  "file": "G:/ftl 11 grade/MOFLC/src/group_manager.cpp",
+  "output": "CMakeFiles/Languages.dir/src/group_manager.cpp.obj"
 }
 ]

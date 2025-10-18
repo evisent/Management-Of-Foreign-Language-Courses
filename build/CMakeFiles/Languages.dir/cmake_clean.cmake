@@ -1,4 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/Languages.dir/src/group_manager.cpp.obj"
+  "CMakeFiles/Languages.dir/src/group_manager.cpp.obj.d"
+  "CMakeFiles/Languages.dir/src/intensity.cpp.obj"
+  "CMakeFiles/Languages.dir/src/intensity.cpp.obj.d"
   "CMakeFiles/Languages.dir/src/languages.cpp.obj"
   "CMakeFiles/Languages.dir/src/languages.cpp.obj.d"
   "CMakeFiles/Languages.dir/src/main.cpp.obj"

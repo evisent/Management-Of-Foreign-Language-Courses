@@ -128,6 +128,54 @@ Languages/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/build
 .PHONY : Languages/fast
 
+src/group_manager.obj: src/group_manager.cpp.obj
+.PHONY : src/group_manager.obj
+
+# target to build an object file
+src/group_manager.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/group_manager.cpp.obj
+.PHONY : src/group_manager.cpp.obj
+
+src/group_manager.i: src/group_manager.cpp.i
+.PHONY : src/group_manager.i
+
+# target to preprocess a source file
+src/group_manager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/group_manager.cpp.i
+.PHONY : src/group_manager.cpp.i
+
+src/group_manager.s: src/group_manager.cpp.s
+.PHONY : src/group_manager.s
+
+# target to generate assembly for a file
+src/group_manager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/group_manager.cpp.s
+.PHONY : src/group_manager.cpp.s
+
+src/intensity.obj: src/intensity.cpp.obj
+.PHONY : src/intensity.obj
+
+# target to build an object file
+src/intensity.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/intensity.cpp.obj
+.PHONY : src/intensity.cpp.obj
+
+src/intensity.i: src/intensity.cpp.i
+.PHONY : src/intensity.i
+
+# target to preprocess a source file
+src/intensity.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/intensity.cpp.i
+.PHONY : src/intensity.cpp.i
+
+src/intensity.s: src/intensity.cpp.s
+.PHONY : src/intensity.s
+
+# target to generate assembly for a file
+src/intensity.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Languages.dir\build.make CMakeFiles/Languages.dir/src/intensity.cpp.s
+.PHONY : src/intensity.cpp.s
+
 src/languages.obj: src/languages.cpp.obj
 .PHONY : src/languages.obj
 
@@ -209,6 +257,12 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... Languages
+	@echo ... src/group_manager.obj
+	@echo ... src/group_manager.i
+	@echo ... src/group_manager.s
+	@echo ... src/intensity.obj
+	@echo ... src/intensity.i
+	@echo ... src/intensity.s
 	@echo ... src/languages.obj
 	@echo ... src/languages.i
 	@echo ... src/languages.s
