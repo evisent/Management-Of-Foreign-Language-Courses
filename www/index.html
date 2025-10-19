@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Модальное окно инициализации -->
     <div id="initModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -32,8 +33,11 @@
 
                 <!-- Форма для ручного создания -->
                 <div id="manualForm" class="manual-form" style="display: none;">
-                    <h3>Создание студентов</h3>
-                    <div class="students-grid" id="manualStudentsGrid">
+                    <h3>Создание 15 студентов</h3>
+                    <div class="form-info">
+                        <p>💡 Каждый студент может изучать несколько языков. Нажмите "+" чтобы добавить язык.</p>
+                    </div>
+                    <div class="manual-students-grid" id="manualStudentsGrid">
                         <!-- Студенты будут генерироваться здесь -->
                     </div>
                     <div class="form-actions">

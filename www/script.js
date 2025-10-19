@@ -1,6 +1,249 @@
 let stateData = {};
 let languagesData = {};
 
+const IS_INITIALIZED_KEY = 'languageSchoolInitialized';
+const LANGUAGES = ['English', 'Spanish', 'German', 'Chinese'];
+const LEVELS = [1, 2, 3]; // 3 уровня
+const INTENSITIES = [
+    { name: 'Light', days: 4 },      // Поддерживающее обучение
+    { name: 'Standard', days: 6 },   // Обычный
+    { name: 'Intensive', days: 8 }   // Интенсив
+];
+
+let selectedOption = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const isInitialized = localStorage.getItem(IS_INITIALIZED_KEY);
+    
+    if (!isInitialized) {
+        showInitModal();
+    } else {
+        closeInitModal();
+    }
+    
+    getState();
+    loadLanguages();
+});
+
+function showInitModal() {
+    document.getElementById('initModal').style.display = 'flex';
+}
+
+function closeInitModal() {
+    document.getElementById('initModal').style.display = 'none';
+}
+
+function selectOption(option) {
+    selectedOption = option;
+    
+    // Убираем выделение со всех карточек
+    document.querySelectorAll('.option-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Добавляем выделение выбранной карточке
+    event.currentTarget.classList.add('selected');
+    
+    if (option === 'auto') {
+        createRandomStudents();
+    } else if (option === 'manual') {
+        showManualForm();
+    }
+}
+
+function showManualForm() {
+    document.querySelector('.init-options').style.display = 'none';
+    document.getElementById('manualForm').style.display = 'block';
+    generateManualStudentsForm();
+}
+
+function backToOptions() {
+    document.getElementById('manualForm').style.display = 'none';
+    document.querySelector('.init-options').style.display = 'grid';
+    selectedOption = null;
+    
+    document.querySelectorAll('.option-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+}
+
+function generateManualStudentsForm() {
+    const grid = document.getElementById('manualStudentsGrid');
+    grid.innerHTML = '';
+    
+    for (let i = 1; i <= 15; i++) {
+        const studentCard = `
+            <div class="student-form-card" data-student-id="${i}">
+                <div class="student-header">
+                    <div class="student-avatar-form">${i}</div>
+                    <input type="text" class="student-name-input" placeholder="Имя студента" value="Студент ${i}">
+                </div>
+                
+                <div class="languages-container" id="languages-${i}">
+                    <div class="language-row">
+                        <select class="form-select student-language">
+                            <option value="">Выберите язык</option>
+                            ${LANGUAGES.map(lang => `<option value="${lang}">${lang}</option>`).join('')}
+                        </select>
+                        <select class="form-select student-level">
+                            <option value="">Уровень</option>
+                            ${LEVELS.map(level => `<option value="${level}">${level}</option>`).join('')}
+                        </select>
+                        <select class="form-select student-intensity">
+                            <option value="">Интенсивность</option>
+                            ${INTENSITIES.map(intensity => 
+                                `<option value="${intensity.name}">${intensity.name} (${intensity.days} дней)</option>`
+                            ).join('')}
+                        </select>
+                        <button class="remove-language" onclick="removeLanguage(${i}, this)" ${i === 1 ? 'style="visibility:hidden;"' : ''}>×</button>
+                    </div>
+                </div>
+                
+                <button class="add-language" onclick="addLanguage(${i})">
+                    + Добавить язык
+                </button>
+            </div>
+        `;
+        grid.innerHTML += studentCard;
+    }
+}
+
+function addLanguage(studentId) {
+    const container = document.getElementById(`languages-${studentId}`);
+    const languageCount = container.querySelectorAll('.language-row').length;
+    
+    const languageRow = document.createElement('div');
+    languageRow.className = 'language-row';
+    languageRow.innerHTML = `
+        <select class="form-select student-language">
+            <option value="">Выберите язык</option>
+            ${LANGUAGES.map(lang => `<option value="${lang}">${lang}</option>`).join('')}
+        </select>
+        <select class="form-select student-level">
+            <option value="">Уровень</option>
+            ${LEVELS.map(level => `<option value="${level}">${level}</option>`).join('')}
+        </select>
+        <select class="form-select student-intensity">
+            <option value="">Интенсивность</option>
+            ${INTENSITIES.map(intensity => 
+                `<option value="${intensity.name}">${intensity.name} (${intensity.days} дней)</option>`
+            ).join('')}
+        </select>
+        <button class="remove-language" onclick="removeLanguage(${studentId}, this)">×</button>
+    `;
+    
+    container.appendChild(languageRow);
+}
+
+function removeLanguage(studentId, button) {
+    const container = document.getElementById(`languages-${studentId}`);
+    const rows = container.querySelectorAll('.language-row');
+    
+    if (rows.length > 1) {
+        button.parentElement.remove();
+    }
+}
+
+async function createRandomStudents() {
+    try {
+        addToOutput("🎲 Создание 15 случайных студентов...");
+        
+        const response = await fetch('/create_random_students', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (!response.ok) throw new Error('Ошибка сервера');
+        
+        const data = await response.json();
+        addToOutput("✅ 15 случайных студентов созданы!");
+        
+        // Сохраняем состояние инициализации
+        localStorage.setItem(IS_INITIALIZED_KEY, 'true');
+        closeInitModal();
+        loadLanguages();
+        getState();
+        
+    } catch (error) {
+        addToOutput("❌ Ошибка при создании случайных студентов: " + error);
+    }
+}
+
+async function createManualStudents() {
+    const studentCards = document.querySelectorAll('.student-form-card');
+    const studentsData = [];
+    
+    // Собираем данные студентов (остальной код без изменений)
+    for (let i = 0; i < studentCards.length; i++) {
+        const card = studentCards[i];
+        const name = card.querySelector('.student-name-input').value || `Студент ${i + 1}`;
+        const languageRows = card.querySelectorAll('.language-row');
+        
+        const languages = [];
+        let hasEmptyFields = false;
+        
+        for (const row of languageRows) {
+            const language = row.querySelector('.student-language').value;
+            const level = row.querySelector('.student-level').value;
+            const intensity = row.querySelector('.student-intensity').value;
+            
+            if (!language || !level || !intensity) {
+                hasEmptyFields = true;
+                break;
+            }
+            
+            languages.push({
+                language: language,
+                level: level,
+                intensity: intensity
+            });
+        }
+        
+        if (hasEmptyFields) {
+            alert(`Пожалуйста, заполните все поля для студента ${i + 1}`);
+            return;
+        }
+        
+        if (languages.length === 0) {
+            alert(`Студент ${i + 1} должен изучать хотя бы один язык`);
+            return;
+        }
+        
+        studentsData.push({
+            name: name,
+            languages: languages
+        });
+    }
+    
+    try {
+        addToOutput("🔄 Создание студентов...");
+        
+        const response = await fetch('/create_manual_students', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(studentsData)
+        });
+        
+        if (!response.ok) throw new Error('Ошибка сервера');
+        
+        const data = await response.json();
+        addToOutput(`✅ ${data.count} студентов успешно создано!`);
+        
+        // Сохраняем состояние инициализации
+        localStorage.setItem(IS_INITIALIZED_KEY, 'true');
+        closeInitModal();
+        loadLanguages();
+        getState();
+        
+    } catch (error) {
+        addToOutput("❌ Ошибка при создании студентов: " + error);
+    }
+}
+
 async function createStudent() {
     try {
         const response = await fetch('/create_student', {
@@ -9,7 +252,13 @@ async function createStudent() {
         const data = await response.json();
         getState();
         addToOutput("✅ Студент успешно создан!");
-        loadLanguages(); // Перезагружаем языки после создания студента
+        loadLanguages();
+        
+        // Если это первый студент, помечаем систему как инициализированную
+        if (!localStorage.getItem(IS_INITIALIZED_KEY)) {
+            localStorage.setItem(IS_INITIALIZED_KEY, 'true');
+        }
+        
     } catch (error) {
         addToOutput("❌ Ошибка при создании студента: " + error);
     }
@@ -134,6 +383,7 @@ function getLanguageFlag(language) {
         'French': 'FR',
         'German': 'DE',
         'Chinese': 'CN',
+        'Arabian': 'AR'
     };
     return flags[language] || '🌍';
 }
@@ -214,7 +464,6 @@ function showGroupDetails(language, level, intensityName) {
     addToOutput(`📖 Открыта группа: ${language} - Уровень ${level}`);
 }
 
-// Добавьте эту вспомогательную функцию для расчета средней цены
 function calculateAveragePrice(students) {
     if (!students || students.length === 0) return 0;
     
@@ -246,15 +495,19 @@ async function resetSchool() {
         });
         const data = await response.json();
         addToOutput("✅ Система успешно сброшена!");
+        
+        // Удаляем состояние инициализации при сбросе
+        localStorage.removeItem(IS_INITIALIZED_KEY);
+        
         getState();
         clearSelection();
         loadLanguages();
+        showInitModal(); // Показываем окно инициализации после сброса
+        
     } catch (error) {
         addToOutput("❌ Ошибка при сбросе системы: " + error);
     }
 }
-
-
 
 function updateUI() {
     document.getElementById('studentsCount').textContent = stateData.students_count || 0;
@@ -272,10 +525,3 @@ function addToOutput(message) {
     output.textContent += `[${timestamp}] ${message}\n`;
     output.scrollTop = output.scrollHeight;
 }
-
-// Initialize
-document.addEventListener('DOMContentLoaded', function() {
-    addToOutput("🚀 Система языковой школы запущена");
-    getState();
-    loadLanguages();
-});
