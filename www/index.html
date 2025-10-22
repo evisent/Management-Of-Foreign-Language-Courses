@@ -50,7 +50,14 @@
     </div>
 
 
-    <div class="app-container">
+        <div class="app-container">
+        <!-- Вкладки -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('groups')">Группы</button>
+            <button class="tab-button" onclick="openTab('individual')">Индивидуальные студенты</button>
+            <button class="tab-button" onclick="openTab('journal')">Журнал</button>
+        </div>
+
         <!-- Левая панель -->
         <div class="left-panel">
             <header class="header">
@@ -76,6 +83,13 @@
                             <div class="stat-label">Групп</div>
                         </div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="individualCount">0</div>
+                            <div class="stat-label">Индивидуальных</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="action-panel">
@@ -96,27 +110,47 @@
                     </div>
                 </div>  
 
-                <!-- Панель языков -->
-                <div class="languages-panel">
-                    <div class="panel-header">
-                        <h3>🌍 Языки и группы</h3>
-                    </div>
-                    <div class="languages-list" id="languagesList">
-                        <div class="empty-state">
-                            <div class="empty-icon">🌍</div>
-                            <h3>Языки не загружены</h3>
-                            <p>Нажмите "Загрузить языки" чтобы показать список</p>
+                <!-- Контент вкладок -->
+                <div id="groups-tab" class="tab-content active">
+                    <!-- Панель языков -->
+                    <div class="languages-panel">
+                        <div class="panel-header">
+                            <h3>🌍 Языки и группы</h3>
+                        </div>
+                        <div class="languages-list" id="languagesList">
+                            <div class="empty-state">
+                                <div class="empty-icon">🌍</div>
+                                <h3>Языки не загружены</h3>
+                                <p>Нажмите "Загрузить языки" чтобы показать список</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="output-panel">
-                    <div class="panel-header">
-                        <h3>Журнал событий</h3>
-                        <button class="btn-sm" onclick="clearOutput()">Очистить</button>
+                <div id="individual-tab" class="tab-content">
+                    <div class="languages-panel">
+                        <div class="panel-header">
+                            <h3>🎯 Индивидуальные студенты</h3>
+                        </div>
+                        <div class="languages-list" id="individualList">
+                            <div class="empty-state">
+                                <div class="empty-icon">🎯</div>
+                                <h3>Нет индивидуальных студентов</h3>
+                                <p>Студенты появятся здесь, когда их группы станут меньше 5 человек</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="output" id="output">
-                        Система запущена. Используйте кнопки для управления...
+                </div>
+
+                <div id="journal-tab" class="tab-content">
+                    <div class="output-panel">
+                        <div class="panel-header">
+                            <h3>Журнал событий</h3>
+                            <button class="btn-sm" onclick="clearOutput()">Очистить</button>
+                        </div>
+                        <div class="output" id="output">
+                            Система запущена. Используйте кнопки для управления...
+                        </div>
                     </div>
                 </div>
             </div>

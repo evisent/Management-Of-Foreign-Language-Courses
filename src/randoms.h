@@ -17,5 +17,6 @@ std::vector<std::unique_ptr<Language>> rand_languages();
 std::unique_ptr<Student> rand_student();
 void rand_leave(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students);
 std::unique_ptr<Language> create_language(const std::string& name, int level, const Intensity& intensity);
-void rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students);
+void rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, std::vector<std::unique_ptr<Student>>& individual_students);
 std::vector<std::unique_ptr<Student>> fifteen_students();
+

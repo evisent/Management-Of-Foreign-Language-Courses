@@ -57,14 +57,14 @@ std::vector<std::unique_ptr<Language>> rand_languages(){
     std::vector<std::unique_ptr<Language>> languages;
     languages.push_back(rand_language());
     
-    if (chance >= 80 && chance < 95) {  // 2 языка (15%)
+    if (chance > 100) {  // 2 языка (15%)
         std::unique_ptr<Language> language2 = rand_language();
         while (language2->get_name() == languages[0]->get_name()) {
             language2 = rand_language();
         }
         languages.push_back(std::move(language2));
     } 
-    else if (chance >= 95) {  // 3 языка (5%)
+    else if (chance >= 101) {  // 3 языка (5%)
         std::unique_ptr<Language> language2 = rand_language();
         while (language2->get_name() == languages[0]->get_name()) {
             language2 = rand_language();
@@ -91,8 +91,8 @@ void rand_leave(GroupManager& manager, std::vector<std::unique_ptr<Student>>& st
     int chance = my_rand() % 100;
 
     if (chance < 5 && !students.empty()){
+        std::cout << "STUDENT LEAVED\n";
         int rand_student = my_rand() % students.size();
-        std::cout << "DELETED: " << students[rand_student]->get_name() << '\n';
 
         Student& student = *students[rand_student];
         
@@ -122,37 +122,55 @@ std::unique_ptr<Language> create_language(const std::string& name, int level, co
 }
 
 
-void rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students){
-    if (students.size() >= 30) return;
+void rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, std::vector<std::unique_ptr<Student>>& individual_students){
+    if (students.size() + individual_students.size() >= 30) {
+        return;
+    }
+
+    int available_slots = 30 - students.size() - individual_students.size();
     
-    std::vector<std::unique_ptr<Student>> students_to_add;
-    auto unique_students = manager.get_unique_students();
+    int amount = my_rand() % 100;
+    int cycles = 0;
     
-    for(auto cur_student : unique_students){
-        int amount = my_rand() % 100;
-        int cycles = 0;
-        if (amount < 60 && students.size() + students_to_add.size() < 30) cycles = 1;
-        else if (amount < 80 && students.size() + students_to_add.size() < 29) cycles = 2; 
-        else cycles = 0;
+    if (amount < 20){
+        cycles = 1;
+    } else if(amount < 40){
+        cycles = 2;
+    } else if(amount < 60){
+        cycles = 3;
+    } else if(amount < 80){
+        cycles = 4;
+    } else {
+        cycles = 5;
+    }
+    
+    cycles = std::min(cycles, available_slots);
+    
+    if (cycles == 0) {
+        return;
+    }
         
-        for (int i = 0; i < cycles; ++i){
-            std::vector<std::unique_ptr<Language>> languages_copy;
-            for (const auto& language : cur_student->get_languages()) {
-                auto new_lang = create_language(language->get_name(), language->get_level(), 
-                                              Intensity(language->get_intensity().get_type()));
-                languages_copy.push_back(std::move(new_lang));
-            }
+    for (int i = 0; i < cycles; ++i){
+        try {
+            auto new_student = std::make_unique<Student>(rand_name(), rand_languages());
             
-            auto new_student = std::make_unique<Student>(rand_name(), std::move(languages_copy));
-            students_to_add.push_back(std::move(new_student));
-        }    
+            for (const auto& language: new_student->get_languages()){
+                if(manager.is_small(language)){
+                    individual_students.push_back(std::move(new_student));
+                    std::cout << "Individual added\n";
+                } else{
+                    if (new_student) {
+                        manager.add_student(*new_student);
+                        students.push_back(std::move(new_student));
+                    }
+                }
+            }
+        } catch (const std::exception& e) {
+            std::cout << "Error creating student: " << e.what() << std::endl;
+        }
     }
     
-    for (auto& student : students_to_add) {
-        manager.add_student(*student);
-        students.push_back(std::move(student));
-    }
-}   
+}  
 
 std::vector<std::unique_ptr<Student>> fifteen_students(){
     std::vector<std::unique_ptr<Student>> students;

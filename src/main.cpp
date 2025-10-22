@@ -12,6 +12,8 @@
 
 GroupManager manager;
 std::vector<std::unique_ptr<Student>> students;
+std::vector<std::unique_ptr<Student>> individual_students;
+std::vector<std::string> NAMESCOPY = NAMES;
 
 std::string get_json_value(const std::string& json_str, const std::string& key) {
         size_t pos = json_str.find("\"" + key + "\":");
@@ -54,28 +56,87 @@ int main() {
     });
 
     // School state endpoint
-    server.Get("/state", [](const httplib::Request&, httplib::Response& res) {
-        int total_students = students.size();
+    server.Get("/individual_students", [](const httplib::Request&, httplib::Response& res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
         
+        try {
+            std::string json_body = "{\"individual_students\":[";
+            
+            bool first_student = true;
+            int total_revenue = 0;
+            
+            for (const auto& student : individual_students) {
+                if (!first_student) {
+                    json_body += ",";
+                }
+                first_student = false;
+                
+                json_body += "{";
+                json_body += "\"name\":\"" + JsonEscape(student->get_name()) + "\",";
+                json_body += "\"languages\":[";
+                
+                bool first_lang = true;
+                int student_revenue = 0;
+                
+                for (const auto& language : student->get_languages()) {
+                    if (!first_lang) {
+                        json_body += ",";
+                    }
+                    first_lang = false;
+                    
+                    json_body += "{";
+                    json_body += "\"name\":\"" + JsonEscape(language->get_name()) + "\",";
+                    json_body += "\"level\":" + std::to_string(language->get_level()) + ",";
+                    json_body += "\"price\":" + std::to_string(language->get_price()) + ",";
+                    json_body += "\"periods_left\":" + std::to_string(language->get_intensity().get_period_left());
+                    json_body += "}";
+                    
+                    student_revenue += language->get_price();
+                }
+                
+                json_body += "],";
+                json_body += "\"total_revenue\":" + std::to_string(student_revenue);
+                json_body += "}";
+                
+                total_revenue += student_revenue;
+            }
+            
+            json_body += "],\"total_revenue\":" + std::to_string(total_revenue) + "}";
+            
+            res.set_content(json_body, "application/json; charset=utf-8");
+            
+        } catch (const std::exception& e) {
+            std::cerr << "ERROR in /individual_students: " << e.what() << std::endl;
+            res.status = 500;
+            res.set_content("{\"error\":\"Internal server error\"}", "application/json");
+        }
+    });
+
+    // Обновите endpoint /state:
+    server.Get("/state", [](const httplib::Request&, httplib::Response& res) {
+        int total_students = students.size() + individual_students.size();
+        std::cout << students.size() << ' ' << individual_students.size() << '\n';
         int total_groups = manager.get_amount();
-    
+        int individual_count = individual_students.size();
+        
         std::string json_body = "{";
         json_body += "\"students_count\":" + std::to_string(total_students) + ",";
-        json_body += "\"groups_count\":" + std::to_string(total_groups);
+        json_body += "\"groups_count\":" + std::to_string(total_groups) + ",";
+        json_body += "\"individual_count\":" + std::to_string(individual_count);
         json_body += "}";
 
         res.set_content(json_body, "application/json; charset=utf-8");
     });
 
     server.Post("/step", [](const httplib::Request& req, httplib::Response& res) {
-        step(manager, students);
+        step(manager, students, individual_students);
         std::cout << NAMES.size() << '\n';
         res.set_content("{\"created\":true}", "application/json");
     });
 
     server.Post("/create_random_students", [](const httplib::Request& req, httplib::Response& res) {
         try {
-            
+            NAMES = NAMESCOPY;
             students = std::move(fifteen_students());
 
             for (int i = 0; i < students.size(); ++i) {
@@ -93,6 +154,7 @@ int main() {
 
     server.Post("/create_manual_students", [](const httplib::Request& req, httplib::Response& res) {
         try {
+            NAMES = NAMESCOPY;
             std::string body = req.body;
             std::vector<std::string> student_data;
             
@@ -157,13 +219,24 @@ int main() {
     
 
     server.Get("/groups", [](const httplib::Request&, httplib::Response& res) {
-        std::string json_body = manager.get_groups_json();
-        res.set_content(json_body, "application/json; charset=utf-8");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        
+        try {
+            std::string json_body = manager.get_groups_json();
+            
+            res.set_content(json_body, "application/json; charset=utf-8");
+            
+        } catch (const std::exception& e) {
+            std::cerr << "❌ ERROR in /groups: " << e.what() << std::endl;
+            res.status = 500;
+            res.set_content("{\"error\":\"Internal server error: " + std::string(e.what()) + "\"}", "application/json");
+        }
     });
 
     server.Post("/reset", [](const httplib::Request&, httplib::Response& res) {
         students.clear();
-        manager.reset();  //
+        individual_students.clear();  // Добавьте эту строку
+        manager.reset();
         res.set_content("{\"reset\":true}", "application/json");
     });
 

@@ -1,6 +1,7 @@
 #include "group_manager.h"
 #include "student.h"
 #include "json_utils.h"
+#include "randoms.h"
 
 void GroupManager::add_student(Student& student){
     for (const auto& language : student.get_languages()) {
@@ -9,23 +10,42 @@ void GroupManager::add_student(Student& student){
     }
 }
 
-void GroupManager::delete_student(Student& student, const std::string& language_name){
-    for (const auto& language : student.get_languages()) {
-        if (language->get_name() == language_name) {
-            auto& student_vec = groups[language_name][language->get_level()][language->get_intensity()];         
-            if (student_vec.empty()) return;       
-            for (int i = 0; i < student_vec.size(); ++i) {
-                if (student_vec[i] == &student) {
-                    student_vec.erase(student_vec.begin() + i);
-                    if (student_vec.empty()) --amount_;
-                    break;
-                }
+void GroupManager::delete_student(Student& student, const std::string& language_name) {
+    auto lang_it = groups.find(language_name);
+    if (lang_it == groups.end()) return;
+    
+    auto& levels = lang_it->second;
+    for (auto level_it = levels.begin(); level_it != levels.end(); ) {
+        auto& intensities = level_it->second;
+        for (auto intensity_it = intensities.begin(); intensity_it != intensities.end(); ) {
+            auto& students_vec = intensity_it->second;
+            auto student_it = std::find(students_vec.begin(), students_vec.end(), &student);
+            
+            if (student_it != students_vec.end()) {
+                students_vec.erase(student_it);
+                std::cout << "DEBUG: Deleted " << student.get_name() 
+                          << " from " << language_name << " L" << level_it->first 
+                          << " " << intensity_it->first.get_type() << std::endl;
             }
-            break;
+            
+            if (students_vec.empty()) {
+                intensity_it = intensities.erase(intensity_it);
+            } else {
+                ++intensity_it;
+            }
+        }
+        
+        if (intensities.empty()) {
+            level_it = levels.erase(level_it);
+        } else {
+            ++level_it;
         }
     }
+    
+    if (levels.empty()) {
+        groups.erase(lang_it);
+    }
 }
-
 
 std::vector<Student*> GroupManager::get_group(const std::string& language, int level, const Intensity& intensity) const {
     auto language_it = groups.find(language);  // find by language
@@ -45,13 +65,48 @@ std::vector<Student*> GroupManager::get_unique_students() const{
     for (const auto& [language, levels] : groups) {   
         for (const auto& [level, intensities] : levels) {
             for (const auto& [intensity, students] : intensities) {
-                if (!students.empty()) {  // ⚠️ ДОБАВЬ ПРОВЕРКУ!
+                if (!students.empty()) { 
                     unique.push_back(students[0]);
                 }
             }
         }
     }
     return unique;
+}
+
+bool GroupManager::is_small(const std::unique_ptr<Language>& language){
+    if(groups[language->get_name()][language->get_level()][language->get_intensity()].size() < 5){
+        return true;
+    }
+    return false;
+}
+
+void GroupManager::to_individual(std::vector<std::unique_ptr<Student>>& students_vec, std::vector<std::unique_ptr<Student>>& individual_students) {            
+    std::vector<Student*> to_delete;
+    std::vector<std::string> langs;
+
+    for (auto& [language, levels] : groups) {   
+        for (auto& [level, intensities] : levels) {
+            for (auto& [intensity, students] : intensities) {
+                if (students.size() < 5 && !students.empty()) {
+                    for (Student* student : students) {
+                        to_delete.push_back(student);
+                        langs.push_back(language);
+                        std::vector <std::unique_ptr<Language>> languages;
+                        for (auto& lng: student->get_languages()){
+                            languages.push_back(create_language(lng->get_name(), lng->get_level(), lng->get_intensity()));
+                        }
+                        individual_students.push_back(std::make_unique<Student>(student->get_name(), std::move(languages), true));
+                    }
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < to_delete.size(); ++i){
+        delete_student(*to_delete[i], langs[i]);
+    }
+
 }
 
 void GroupManager::print_all() const {
@@ -130,7 +185,6 @@ std::string GroupManager::get_groups_json() const {
     }
     
     json_body += "]}";
-    std::cout << "DEBUG: Generated JSON for " << group_count << " groups" << std::endl;
     return json_body;
 }
 

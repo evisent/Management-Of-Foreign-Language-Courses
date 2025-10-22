@@ -4,6 +4,8 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <memory>
+#include <algorithm>
 
 class Student;
 
@@ -18,6 +20,8 @@ public:
     std::vector<Student*> get_unique_students() const;
 
     void print_all() const;
+    bool is_small(const std::unique_ptr<Language>& language);
+    void to_individual(std::vector<std::unique_ptr<Student>>& students, std::vector<std::unique_ptr<Student>>& individual_students);
     std::string get_groups_json() const;
     void reset();
     int get_amount() const;

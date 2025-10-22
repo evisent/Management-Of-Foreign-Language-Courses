@@ -306,12 +306,53 @@ async function getState() {
 
 async function loadLanguages() {
     try {
+        console.log("🔄 Starting loadLanguages...");
+        
         const response = await fetch('/groups');
-        const data = await response.json();
+        console.log("📡 Response status:", response.status, response.statusText);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        // Сначала получаем текст для диагностики
+        const text = await response.text();
+        console.log("📄 Raw response text:", text);
+        console.log("📏 Response length:", text.length);
+        
+        if (!text || text.trim() === '') {
+            throw new Error('Server returned empty response');
+        }
+        
+        // Пытаемся парсить JSON
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (jsonError) {
+            console.error("❌ JSON parse error:", jsonError);
+            console.error("💥 Problematic JSON:", text.substring(0, 200) + "...");
+            throw new Error(`Invalid JSON from server: ${jsonError.message}`);
+        }
+        
+        console.log("✅ JSON parsed successfully, groups count:", data.groups?.length || 0);
+        
         languagesData = data.groups || [];
         displayLanguages(languagesData);
+        
     } catch (error) {
-        addToOutput("❌ Ошибка при загрузке языков: " + error);
+        console.error("💥 loadLanguages error:", error);
+        addToOutput("❌ Ошибка при загрузке языков: " + error.message);
+        
+        // Показываем детальную ошибку в интерфейсе
+        const list = document.getElementById('languagesList');
+        list.innerHTML = `
+            <div class="empty-state error-state">
+                <div class="empty-icon">❌</div>
+                <h3>Ошибка загрузки данных</h3>
+                <p>${error.message}</p>
+                <button onclick="loadLanguages()" class="retry-btn">Повторить загрузку</button>
+            </div>
+        `;
     }
 }
 
@@ -498,6 +539,94 @@ function clearSelection() {
     `;
 }
 
+function openTab(tabName) {
+    // Скрыть все вкладки
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Убрать активность со всех кнопок
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Показать выбранную вкладку
+    document.getElementById(tabName + '-tab').classList.add('active');
+    event.currentTarget.classList.add('active');
+    
+    // Загрузить данные если нужно
+    if (tabName === 'individual') {
+        loadIndividualStudents();
+    }
+}
+
+// Загрузка индивидуальных студентов
+async function loadIndividualStudents() {
+    try {
+        const response = await fetch('/individual_students');
+        const data = await response.json();
+        displayIndividualStudents(data.individual_students || []);
+        
+    } catch (error) {
+        console.error('Error loading individual students:', error);
+        document.getElementById('individualList').innerHTML = `
+            <div class="empty-state error-state">
+                <div class="empty-icon">❌</div>
+                <h3>Ошибка загрузки</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+// Отображение индивидуальных студентов
+function displayIndividualStudents(students) {
+    const list = document.getElementById('individualList');
+    
+    if (!students || students.length === 0) {
+        list.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🎯</div>
+                <h3>Нет индивидуальных студентов</h3>
+                <p>Студенты появятся здесь, когда их группы станут меньше 5 человек</p>
+            </div>
+        `;
+        return;
+    }
+    
+    list.innerHTML = students.map(student => {
+        const totalRevenue = student.languages?.reduce((sum, lang) => sum + (lang.price || 0), 0) || 0;
+        
+        return `
+            <div class="individual-student-card">
+                <div class="student-header-individual">
+                    <div class="student-avatar-individual">
+                        ${student.name ? student.name.charAt(0).toUpperCase() : '?'}
+                    </div>
+                    <div>
+                        <div class="student-name-individual">${student.name || 'Неизвестный'}</div>
+                        <div class="student-revenue">💰 ${totalRevenue} ₽/период</div>
+                    </div>
+                </div>
+                
+                <div class="student-languages-individual">
+                    <strong>Изучаемые языки:</strong>
+                    ${(student.languages || []).map(lang => `
+                        <div class="language-tag">
+                            ${lang.name || 'Unknown'} 
+                            (Ур. ${lang.level || 1}) 
+                            - ${lang.periods_left || 0} периодов
+                            <br>
+                            <small>${lang.price || 0} ₽</small>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+
 async function resetSchool() {
     if (!confirm("Вы уверены, что хотите очистить все данные? Это действие нельзя отменить.")) {
         return;
@@ -526,6 +655,11 @@ async function resetSchool() {
 function updateUI() {
     document.getElementById('studentsCount').textContent = stateData.students_count || 0;
     document.getElementById('groupsCount').textContent = stateData.groups_count || 0;
+    document.getElementById('individualCount').textContent = stateData.individual_count || 0;
+    
+    if (document.getElementById('individual-tab').classList.contains('active')) {
+        loadIndividualStudents();
+    }
 }
 
 function clearOutput() {
@@ -539,3 +673,4 @@ function addToOutput(message) {
     output.textContent += `[${timestamp}] ${message}\n`;
     output.scrollTop = output.scrollHeight;
 }
+

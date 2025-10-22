@@ -778,3 +778,107 @@ body {
         width: 100%;
     }
 }
+
+/* Стили для вкладок */
+.tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    background: var(--card-bg);
+    border-radius: 12px 12px 0 0;
+    padding: 0 20px;
+}
+
+.tab-button {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+    color: var(--primary);
+    background: var(--hover);
+}
+
+.tab-button.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    background: var(--hover);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Стили для индивидуальных студентов */
+.individual-student-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.individual-student-card:hover {
+    border-color: var(--success);
+    transform: translateX(5px);
+}
+
+.student-header-individual {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.student-avatar-individual {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--success), #10b981);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.student-name-individual {
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 1.1em;
+}
+
+.student-languages-individual {
+    margin-top: 10px;
+}
+
+.language-tag {
+    display: inline-block;
+    background: var(--success-light);
+    color: var(--success);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8em;
+    margin: 2px;
+    border: 1px solid var(--success);
+}
+
+.student-revenue {
+    color: var(--success);
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 0.9em;
+}
