@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-std::vector<std::string> NAMES = { // 336 names
+inline std::vector<std::string> NAMES = { // 336 names
     "James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda",
     "William", "Elizabeth", "David", "Barbara", "Richard", "Susan", "Joseph", "Jessica",
     "Thomas", "Sarah", "Charles", "Karen", "Christopher", "Nancy", "Daniel", "Lisa",

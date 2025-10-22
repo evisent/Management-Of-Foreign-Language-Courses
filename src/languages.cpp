@@ -28,13 +28,18 @@ int Language::get_level() const {
     return level_;
 }
 
+void Language::plus_level(){
+    ++level_;
+}
+
 void Language::set_intensity(const Intensity& intensity){
     intensity_ = intensity;
 }
 
-Intensity Language::get_intensity() const{
+Intensity& Language::get_intensity(){
     return intensity_;
 }
+
 
 English::English(int level, const Intensity& intensity){
     set_price(ENGLISHPRICE / intensity.get_period());

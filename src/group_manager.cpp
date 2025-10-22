@@ -1,5 +1,4 @@
 #include "group_manager.h"
-#include "languages.h"
 #include "student.h"
 #include "json_utils.h"
 
@@ -13,11 +12,12 @@ void GroupManager::add_student(Student& student){
 void GroupManager::delete_student(Student& student, const std::string& language_name){
     for (const auto& language : student.get_languages()) {
         if (language->get_name() == language_name) {
-            std::vector<Student*>& students = groups[language_name][language->get_level()][language->get_intensity()];               
-            for (int i = 0; i < students.size(); ++i) {
-                if (students[i] == &student) {
-                    students.erase(students.begin() + i);
-                    if (students.empty()) --amount_;
+            auto& student_vec = groups[language_name][language->get_level()][language->get_intensity()];         
+            if (student_vec.empty()) return;       
+            for (int i = 0; i < student_vec.size(); ++i) {
+                if (student_vec[i] == &student) {
+                    student_vec.erase(student_vec.begin() + i);
+                    if (student_vec.empty()) --amount_;
                     break;
                 }
             }
@@ -38,6 +38,20 @@ std::vector<Student*> GroupManager::get_group(const std::string& language, int l
     if (intensity_it == level_it->second.end()) return {};
     
     return intensity_it->second;       
+}
+
+std::vector<Student*> GroupManager::get_unique_students() const{
+    std::vector<Student*> unique;
+    for (const auto& [language, levels] : groups) {   
+        for (const auto& [level, intensities] : levels) {
+            for (const auto& [intensity, students] : intensities) {
+                if (!students.empty()) {  // ⚠️ ДОБАВЬ ПРОВЕРКУ!
+                    unique.push_back(students[0]);
+                }
+            }
+        }
+    }
+    return unique;
 }
 
 void GroupManager::print_all() const {
@@ -85,7 +99,7 @@ std::string GroupManager::get_groups_json() const {
                     json_body += "{";
                     json_body += "\"language\":\"" + JsonEscape(language) + "\",";
                     json_body += "\"level\":" + std::to_string(level) + ",";
-                    json_body += "\"intensity_days\":" + std::to_string(intensity.get_days()) + ",";
+                    json_body += "\"periods_left\":" + std::to_string(intensity.get_period()) + ","; // общее количество периодов для группы
                     json_body += "\"intensity_name\":\"" + JsonEscape(intensity.get_name()) + "\",";
             
                     json_body += "\"students\":[";
@@ -101,6 +115,7 @@ std::string GroupManager::get_groups_json() const {
                         for (const auto& studentLanguage : student->get_languages()){
                             if (studentLanguage->get_name() == language){
                                 json_body += ",\"price\":" + std::to_string(studentLanguage->get_price());
+                                json_body += ",\"student_periods_left\":" + std::to_string(studentLanguage->get_intensity().get_period_left()); // индивидуальный periods_left
                                 break; 
                             }
                         }

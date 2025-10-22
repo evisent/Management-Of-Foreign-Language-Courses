@@ -5,6 +5,7 @@
 #include "intensity.h"
 #include "student.h"
 #include "languages.h"
+#include "step.h"
 #include <vector>
 #include <memory>
 
@@ -31,22 +32,6 @@ Intensity create_intensity(const std::string& intensity_name) {
     else if (intensity_name == "Standard") return Intensity(2);  
     else if (intensity_name == "Intensive") return Intensity(3); 
     else return Intensity(2);
-}
-
-std::unique_ptr<Language> create_language(const std::string& language_name, int level, const Intensity& intensity) {
-    if (language_name == "English") {
-        return std::make_unique<English>(level, intensity);
-    } else if (language_name == "Spanish") {
-        return std::make_unique<Spanish>(level, intensity);
-    } else if (language_name == "French") {
-        return std::make_unique<French>(level, intensity);
-    } else if (language_name == "German") {
-        return std::make_unique<German>(level, intensity);
-    } else if (language_name == "Chinese") {
-        return std::make_unique<Chinese>(level, intensity);
-    } else {
-        return std::make_unique<English>(level, intensity); 
-    }
 }
 
 int main() {
@@ -82,25 +67,22 @@ int main() {
         res.set_content(json_body, "application/json; charset=utf-8");
     });
 
-    server.Post("/create_student", [](const httplib::Request& req, httplib::Response& res) {
-        auto student = rand_student();
-        manager.add_student(*student);
-        students.push_back(std::move(student));
-        
+    server.Post("/step", [](const httplib::Request& req, httplib::Response& res) {
+        step(manager, students);
+        std::cout << NAMES.size() << '\n';
         res.set_content("{\"created\":true}", "application/json");
     });
 
     server.Post("/create_random_students", [](const httplib::Request& req, httplib::Response& res) {
         try {
-            int count = 15; 
             
-            for (int i = 0; i < count; ++i) {
-                auto student = rand_student();
-                manager.add_student(*student);
-                students.push_back(std::move(student));
+            students = std::move(fifteen_students());
+
+            for (int i = 0; i < students.size(); ++i) {
+                manager.add_student(*students[i]);
             }
             
-            std::string response = "{\"created\":true,\"count\":" + std::to_string(count) + "}";
+            std::string response = "{\"created\":true,\"count\":" + std::to_string(students.size()) + "}";
             res.set_content(response, "application/json");
             
         } catch (const std::exception& e) {

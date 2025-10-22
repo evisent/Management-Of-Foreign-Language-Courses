@@ -12,11 +12,11 @@ public:
 
     virtual void set_level(int level);
     virtual int get_level() const;
+    virtual void plus_level();
 
     virtual void set_intensity(const Intensity& intensity);
-    virtual Intensity get_intensity() const;
+    virtual Intensity& get_intensity();
     virtual void set_individual_price() = 0;
-
     virtual ~Language() = default;
 
 private:

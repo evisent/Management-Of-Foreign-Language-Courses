@@ -3,11 +3,11 @@ let languagesData = {};
 
 const IS_INITIALIZED_KEY = 'languageSchoolInitialized';
 const LANGUAGES = ['English', 'Spanish', 'German', 'Chinese'];
-const LEVELS = [1, 2, 3]; // 3 уровня
+const LEVELS = [1, 2, 3];
 const INTENSITIES = [
-    { name: 'Light', days: 4 },      // Поддерживающее обучение
-    { name: 'Standard', days: 6 },   // Обычный
-    { name: 'Intensive', days: 8 }   // Интенсив
+    { name: 'Поддерживающее обучение', periods: 3 },      // Поддерживающее обучение
+    { name: 'Обычный', periods: 4 },   // Обычный
+    { name: 'интенсив', periods: 6 }   // интенсив
 ];
 
 let selectedOption = null;
@@ -92,7 +92,7 @@ function generateManualStudentsForm() {
                         <select class="form-select student-intensity">
                             <option value="">Интенсивность</option>
                             ${INTENSITIES.map(intensity => 
-                                `<option value="${intensity.name}">${intensity.name} (${intensity.days} дней)</option>`
+                                `<option value="${intensity.name}">${intensity.name} (${intensity.periods} периодов)</option>`
                             ).join('')}
                         </select>
                         <button class="remove-language" onclick="removeLanguage(${i}, this)" ${i === 1 ? 'style="visibility:hidden;"' : ''}>×</button>
@@ -126,7 +126,7 @@ function addLanguage(studentId) {
         <select class="form-select student-intensity">
             <option value="">Интенсивность</option>
             ${INTENSITIES.map(intensity => 
-                `<option value="${intensity.name}">${intensity.name} (${intensity.days} дней)</option>`
+                `<option value="${intensity.name}">${intensity.name} (${intensity.periods} периодов)</option>`
             ).join('')}
         </select>
         <button class="remove-language" onclick="removeLanguage(${studentId}, this)">×</button>
@@ -244,9 +244,22 @@ async function createManualStudents() {
     }
 }
 
+let isCreating = false;
 async function createStudent() {
+    if(isCreating){
+        addToOutput("⏳ Подождите, создание уже выполняется...");
+        return;
+    }
+
+    isCreating = true;
+    const button = event.target;
+    const originalText = button.innerHTML;
+    
+    button.innerHTML = '⏳ Создание...';
+    button.disabled = true;
+
     try {
-        const response = await fetch('/create_student', {
+        const response = await fetch('/step', {
             method: 'POST'
         });
         const data = await response.json();
@@ -254,13 +267,16 @@ async function createStudent() {
         addToOutput("✅ Студент успешно создан!");
         loadLanguages();
         
-        // Если это первый студент, помечаем систему как инициализированную
         if (!localStorage.getItem(IS_INITIALIZED_KEY)) {
             localStorage.setItem(IS_INITIALIZED_KEY, 'true');
         }
         
     } catch (error) {
         addToOutput("❌ Ошибка при создании студента: " + error);
+    } finally{
+        button.innerHTML = originalText;
+        button.disabled = false;
+        isCreating = false;
     }
 }
 
@@ -360,7 +376,7 @@ function displayLanguages(groups) {
                                 <div>
                                     <div class="group-level">Уровень ${group.level || 1}</div>
                                     <div class="group-intensity">
-                                        ${group.intensity_name || 'Unknown'} (${group.intensity_days || 1} дней)
+                                        ${group.intensity_name || 'Unknown'} (${group.periods_left || 1} периодов осталось)
                                         <div style="color: var(--success); font-size: 0.8em; margin-top: 2px;">
                                             💰 ${avgPrice} ₽/студ
                                         </div>
@@ -397,7 +413,6 @@ function toggleLanguage(language) {
 }
 
 function showGroupDetails(language, level, intensityName) {
-    // Находим группу в данных
     const group = languagesData.find(g => 
         g.language === language && 
         g.level === level && 
@@ -406,15 +421,12 @@ function showGroupDetails(language, level, intensityName) {
 
     if (!group) return;
 
-    // Убираем выделение с других групп
     document.querySelectorAll('.group-item').forEach(item => {
         item.classList.remove('active');
     });
 
-    // Добавляем выделение текущей группе
     event.target.closest('.group-item').classList.add('active');
 
-    // Показываем детали
     const details = document.getElementById('groupDetails');
     details.innerHTML = `
         <div class="details-card">
@@ -427,7 +439,7 @@ function showGroupDetails(language, level, intensityName) {
             <div class="details-meta">
                 <div class="meta-item">
                     <div class="meta-label">Интенсивность</div>
-                    <div class="meta-value">${intensityName} (${group.intensity_days || 1} дней)</div>
+                    <div class="meta-value">${intensityName} (${group.periods_left || 1} периодов всего)</div>
                 </div>
                 <div class="meta-item">
                     <div class="meta-label">Количество студентов</div>
@@ -451,7 +463,9 @@ function showGroupDetails(language, level, intensityName) {
                                 <div class="student-name">${student.name || 'Неизвестный'}</div>
                                 <div class="student-languages">
                                     <span>Цена: ${student.price || 0} ₽</span>
-                                    <span style="margin-left: 10px; color: var(--gray);">${language}</span>
+                                    <span style="margin-left: 10px; color: var(--success);">
+                                        ${student.student_periods_left || 0} периодов осталось
+                                    </span>
                                 </div>
                             </div>
                         </div>

@@ -9,6 +9,7 @@ add_executable(Languages
     src/languages.cpp
     src/intensity.cpp
     src/group_manager.cpp
+    src/randoms.cpp
 )
 
 # Универсальное связывание сетевых библиотек

@@ -4,6 +4,8 @@
 #include <vector>
 #include "languages.h"
 
+class GroupManager;
+
 class Student{
 public:
     Student() = default;
@@ -14,6 +16,8 @@ public:
     const std::vector<std::unique_ptr<Language>>& get_languages() const;
     void delete_language(int index);
     bool is_individual() const;
+    void is_graduate(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, int index);
+    void change_intensity(GroupManager& manager);
     ~Student() = default;
     
 private:

@@ -1,10 +1,11 @@
 #pragma once
 #include "languages.h"
-#include "student.h"
 #include <map>
 #include <vector>
 #include <iostream>
 #include <string>
+
+class Student;
 
 class GroupManager {
 public:
@@ -14,6 +15,8 @@ public:
 
     std::vector<Student*> get_group(const std::string& language, int level, const Intensity& intensity) const;
     
+    std::vector<Student*> get_unique_students() const;
+
     void print_all() const;
     std::string get_groups_json() const;
     void reset();
