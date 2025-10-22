@@ -8,24 +8,25 @@
 #include "step.h"
 #include <vector>
 #include <memory>
-
+#include <iostream>
 
 GroupManager manager;
 std::vector<std::unique_ptr<Student>> students;
+std::vector<std::unique_ptr<Student>> individual_students;
 
 std::string get_json_value(const std::string& json_str, const std::string& key) {
-        size_t pos = json_str.find("\"" + key + "\":");
-        if (pos == std::string::npos) return "";
-        
-        pos += key.length() + 3;
-        size_t start = json_str.find("\"", pos);
-        if (start == std::string::npos) return "";
-        
-        size_t end = json_str.find("\"", start + 1);
-        if (end == std::string::npos) return "";
-        
-        return json_str.substr(start + 1, end - start - 1);
-    }
+    size_t pos = json_str.find("\"" + key + "\":");
+    if (pos == std::string::npos) return "";
+    
+    pos += key.length() + 3;
+    size_t start = json_str.find("\"", pos);
+    if (start == std::string::npos) return "";
+    
+    size_t end = json_str.find("\"", start + 1);
+    if (end == std::string::npos) return "";
+    
+    return json_str.substr(start + 1, end - start - 1);
+}
 
 Intensity create_intensity(const std::string& intensity_name) {
     if (intensity_name == "Light") return Intensity(1);     
@@ -56,7 +57,6 @@ int main() {
     // School state endpoint
     server.Get("/state", [](const httplib::Request&, httplib::Response& res) {
         int total_students = students.size();
-        
         int total_groups = manager.get_amount();
     
         std::string json_body = "{";
@@ -67,20 +67,23 @@ int main() {
         res.set_content(json_body, "application/json; charset=utf-8");
     });
 
+    // Step simulation endpoint
     server.Post("/step", [](const httplib::Request& req, httplib::Response& res) {
-        step(manager, students);
-        std::cout << NAMES.size() << '\n';
+        step(manager, students, individual_students);
         res.set_content("{\"created\":true}", "application/json");
     });
 
+    // Create random students endpoint
     server.Post("/create_random_students", [](const httplib::Request& req, httplib::Response& res) {
         try {
-            
             students = std::move(fifteen_students());
 
             for (int i = 0; i < students.size(); ++i) {
                 manager.add_student(*students[i]);
             }
+            
+            // Оптимизируем группы после создания всех студентов
+            manager.optimizeAllGroups();
             
             std::string response = "{\"created\":true,\"count\":" + std::to_string(students.size()) + "}";
             res.set_content(response, "application/json");
@@ -91,6 +94,7 @@ int main() {
         }
     });
 
+    // Create manual students endpoint
     server.Post("/create_manual_students", [](const httplib::Request& req, httplib::Response& res) {
         try {
             std::string body = req.body;
@@ -146,6 +150,9 @@ int main() {
                 }
             }
             
+            // Оптимизируем группы после создания всех студентов
+            manager.optimizeAllGroups();
+            
             std::string response = "{\"created\":true,\"count\":" + std::to_string(created_count) + "}";
             res.set_content(response, "application/json");
             
@@ -154,28 +161,80 @@ int main() {
             res.set_content(response, "application/json");
         }
     });
-    
 
+    // Get groups information endpoint
     server.Get("/groups", [](const httplib::Request&, httplib::Response& res) {
         std::string json_body = manager.get_groups_json();
         res.set_content(json_body, "application/json; charset=utf-8");
     });
 
+    // Reset system endpoint
     server.Post("/reset", [](const httplib::Request&, httplib::Response& res) {
         students.clear();
-        manager.reset();  //
+        manager.reset();
         res.set_content("{\"reset\":true}", "application/json");
     });
 
+    // Delete random student endpoint
     server.Post("/delete_student", [](const httplib::Request&, httplib::Response& res) {
-        rand_leave(manager, students);
+        rand_leave(manager, students, individual_students);
         res.set_content("{\"deleted\":true}", "application/json");
     });
 
+    server.Get("/individual_students", [](const httplib::Request&, httplib::Response& res) {
+        std::string json_body = "{\"individual_students\":[";
+        
+        bool first_student = true;
+        for (const auto& student : individual_students) {
+            if (!first_student) {
+                json_body += ",";
+            }
+            first_student = false;
+            
+            json_body += "{";
+            json_body += "\"name\":\"" + JsonEscape(student->get_name()) + "\",";
+            
+            // Вычисляем общую цену
+            int total_price = 0;
+            for (const auto& language : student->get_languages()) {
+                total_price += language->get_price();
+            }
+            json_body += "\"total_price\":" + std::to_string(total_price) + ",";
+            
+            json_body += "\"languages\":[";
+            bool first_lang = true;
+            for (const auto& language : student->get_languages()) {
+                if (!first_lang) json_body += ",";
+                first_lang = false;
+                
+                json_body += "{";
+                json_body += "\"language\":\"" + JsonEscape(language->get_name()) + "\",";
+                json_body += "\"level\":" + std::to_string(language->get_level()) + ",";
+                json_body += "\"price\":" + std::to_string(language->get_price()) + ",";
+                json_body += "\"periods_left\":" + std::to_string(language->get_intensity().get_period_left());
+                json_body += "}";
+            }
+            json_body += "]";
+            
+            json_body += "}";
+        }
+        
+        json_body += "]}";
+        res.set_content(json_body, "application/json; charset=utf-8");
+    });
+
+    // Debug endpoint - print all groups to console
+    server.Get("/debug", [](const httplib::Request&, httplib::Response& res) {
+        std::cout << "=== DEBUG INFO ===" << std::endl;
+        manager.print_all();
+        std::cout << "==================" << std::endl;
+        res.set_content("{\"debug\":true}", "application/json");
+    });
 
     server.set_mount_point("/", "./www");
 
-    std::cout << "Language School Server running on http://0.0.0.0:8080\n";
+    std::cout << "Language School Server running on http://0.0.0.0:8080" << std::endl;
+    
     server.listen("0.0.0.0", 8080);
     return 0;
 }

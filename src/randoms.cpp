@@ -1,3 +1,4 @@
+#include <iostream>
 #include <chrono> 
 #include <random>
 #include <string>
@@ -87,9 +88,11 @@ std::unique_ptr<Student> rand_student(){
 }
 
 
-void rand_leave(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students){
+void rand_leave(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students,
+                std::vector<std::unique_ptr<Student>>& individual_students) {
     int chance = my_rand() % 100;
 
+    // Удаление групповых студентов
     if (chance < 5 && !students.empty()){
         int rand_student = my_rand() % students.size();
         std::cout << "DELETED: " << students[rand_student]->get_name() << '\n';
@@ -98,16 +101,20 @@ void rand_leave(GroupManager& manager, std::vector<std::unique_ptr<Student>>& st
         
         const auto& languages = student.get_languages();
         
-        int rand_language = my_rand() % languages.size();
-        std::string language_name = languages[rand_language]->get_name();
-        
-        manager.delete_student(student, language_name);
-        
-        if (languages.size() == 1){
-            students.erase(students.begin() + rand_student);
-        } else {
-            students[rand_student]->delete_language(rand_language);
+        // Удаляем студента из всех групп
+        for (const auto& language : languages) {
+            manager.delete_student(student, language->get_name());
         }
+        
+        // Полностью удаляем студента
+        students.erase(students.begin() + rand_student);
+    }
+    
+    // Удаление индивидуальных студентов
+    if (chance < 2 && !individual_students.empty()) {
+        int rand_student = my_rand() % individual_students.size();
+        std::cout << "DELETED INDIVIDUAL: " << individual_students[rand_student]->get_name() << '\n';
+        individual_students.erase(individual_students.begin() + rand_student);
     }
 }
 
@@ -151,6 +158,11 @@ void rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& stud
     for (auto& student : students_to_add) {
         manager.add_student(*student);
         students.push_back(std::move(student));
+    }
+
+    if (!students_to_add.empty()) {
+        std::cout << "Added " << students_to_add.size() << " new student(s) across " 
+                  << unique_students.size() << " groups" << std::endl;
     }
 }   
 

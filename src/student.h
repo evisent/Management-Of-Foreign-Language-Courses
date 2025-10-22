@@ -15,7 +15,10 @@ public:
     void get_info() const;
     const std::vector<std::unique_ptr<Language>>& get_languages() const;
     void delete_language(int index);
-    bool is_individual() const;
+    void convert_to_individual();
+    bool is_individual() const { return individual_; }
+    void set_individual(bool individual) { individual_ = individual; }
+    bool should_graduate() const;
     void is_graduate(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, int index);
     void change_intensity(GroupManager& manager);
     ~Student() = default;

@@ -754,6 +754,83 @@ body {
     border-top: 2px solid var(--border);
 }
 
+/* Стили для панели индивидуальных студентов */
+.individual-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.individual-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.individual-student-card {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: var(--background);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.individual-student-card .student-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 12px;
+}
+
+.individual-student-card .student-info {
+    flex: 1;
+}
+
+.individual-student-card .student-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.individual-student-card .student-languages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.language-tag {
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.individual-student-card .student-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+    color: var(--text-secondary);
+}
+
+.total-price {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.periods-left {
+    color: var(--warning);
+}
+
 /* Адаптивность для модального окна */
 @media (max-width: 768px) {
     .init-options {

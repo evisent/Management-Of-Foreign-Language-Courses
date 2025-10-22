@@ -34,8 +34,12 @@ void Student::get_info() const {
     std::cout << std::endl;
 }
 
-bool Student::is_individual() const {
-    return individual_;
+void Student::convert_to_individual() {
+    individual_ = true;
+    for (auto& language : languages_) {
+        language->set_individual_price();
+    }
+    std::cout << name_ << " converted to individual lessons" << std::endl;
 }
 
 void Student::change_intensity(GroupManager& manager) {
@@ -49,9 +53,10 @@ void Student::change_intensity(GroupManager& manager) {
             int old_level = languages_[i]->get_level();
             Intensity old_intensity = languages_[i]->get_intensity();
             
-            auto new_language = create_language(lang_name, old_level + 1, Intensity(languages_[i]->get_intensity().get_type()));
-            
             manager.delete_student(*this, lang_name);
+            
+            auto new_language = create_language(lang_name, old_level + 1, 
+                                              Intensity(languages_[i]->get_intensity().get_type()));
             
             languages_[i] = std::move(new_language);
             
@@ -60,18 +65,30 @@ void Student::change_intensity(GroupManager& manager) {
     }
 }
 
+bool Student::should_graduate() const {
+    for (const auto& language : languages_) {
+        if (language->get_intensity().get_period_left() == 0 && 
+            language->get_level() == 3) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Student::is_graduate(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, int index){
     // Проверяем сначала языки
-    for (int i = languages_.size() - 1; i >= 0; --i) {  // ⚠️ Обратная итерация!
+    for (int i = languages_.size() - 1; i >= 0; --i) {  
         if (languages_[i]->get_intensity().get_period_left() == 0 && 
             languages_[i]->get_level() == 3) {
             
-            manager.delete_student(*this, languages_[i]->get_name());
+            if (!individual_) {
+                manager.delete_student(*this, languages_[i]->get_name());
+            }
             
             if (languages_.size() == 1) {
                 students.erase(students.begin() + index);
                 std::cout << this->name_ << " left course" << std::endl;
-                return;  // ⚠️ Выходим сразу, т.к. студент удален
+                return;  
             } else {
                 languages_.erase(languages_.begin() + i);
             }

@@ -2,12 +2,12 @@ let stateData = {};
 let languagesData = {};
 
 const IS_INITIALIZED_KEY = 'languageSchoolInitialized';
-const LANGUAGES = ['English', 'Spanish', 'German', 'Chinese'];
+const LANGUAGES = ['English', 'Spanish', 'German', 'Chinese', 'French', 'Arabian'];
 const LEVELS = [1, 2, 3];
 const INTENSITIES = [
-    { name: 'Поддерживающее обучение', periods: 3 },      // Поддерживающее обучение
-    { name: 'Обычный', periods: 4 },   // Обычный
-    { name: 'интенсив', periods: 6 }   // интенсив
+    { name: 'Light', periods: 3 },           // Поддерживающее обучение
+    { name: 'Standard', periods: 4 },        // Обычный  
+    { name: 'Intensive', periods: 6 }        // интенсив
 ];
 
 let selectedOption = null;
@@ -175,7 +175,6 @@ async function createManualStudents() {
     const studentCards = document.querySelectorAll('.student-form-card');
     const studentsData = [];
     
-    // Собираем данные студентов (остальной код без изменений)
     for (let i = 0; i < studentCards.length; i++) {
         const card = studentCards[i];
         const name = card.querySelector('.student-name-input').value || `Студент ${i + 1}`;
@@ -255,7 +254,7 @@ async function createStudent() {
     const button = event.target;
     const originalText = button.innerHTML;
     
-    button.innerHTML = '⏳ Создание...';
+    button.innerHTML = '⏳ Следующий шаг...';
     button.disabled = true;
 
     try {
@@ -264,15 +263,15 @@ async function createStudent() {
         });
         const data = await response.json();
         getState();
-        addToOutput("✅ Студент успешно создан!");
-        loadLanguages();
+        addToOutput("✅ Шаг симуляции выполнен!");
+        loadLanguages(); // Это теперь загружает и группы и индивидуальных студентов
         
         if (!localStorage.getItem(IS_INITIALIZED_KEY)) {
             localStorage.setItem(IS_INITIALIZED_KEY, 'true');
         }
         
     } catch (error) {
-        addToOutput("❌ Ошибка при создании студента: " + error);
+        addToOutput("❌ Ошибка при выполнении шага: " + error);
     } finally{
         button.innerHTML = originalText;
         button.disabled = false;
@@ -280,14 +279,15 @@ async function createStudent() {
     }
 }
 
+// Также обновим другие функции которые должны обновлять интерфейс
 async function deleteStudent() {
     try{
         const response = await fetch('/delete_student', {
             method: 'POST'
         })
         const data = await response.json();
-        addToOutput("✅ Студент покинул курс");
-        loadLanguages();
+        addToOutput("✅ Случайный студент покинул курс");
+        loadLanguages(); // Обновляем интерфейс
         getState();
     } catch(error){
         addToOutput("❌ Ошибка при удалении студента: " + error);
@@ -310,8 +310,87 @@ async function loadLanguages() {
         const data = await response.json();
         languagesData = data.groups || [];
         displayLanguages(languagesData);
+        
+        // Загружаем индивидуальных студентов
+        await loadIndividualStudents();
     } catch (error) {
-        addToOutput("❌ Ошибка при загрузке языков: " + error);
+        addToOutput("❌ Ошибка при загрузке групп: " + error);
+    }
+}
+
+async function loadIndividualStudents() {
+    try {
+        const response = await fetch('/individual_students');
+        const data = await response.json();
+        displayIndividualStudents(data.individual_students || []);
+    } catch (error) {
+        addToOutput("❌ Ошибка при загрузке индивидуальных студентов: " + error);
+    }
+}
+
+// Функция для загрузки индивидуальных студентов
+async function loadIndividualStudents() {
+    try {
+        const response = await fetch('/individual_students');
+        const data = await response.json();
+        displayIndividualStudents(data.individual_students || []);
+    } catch (error) {
+        console.error("Ошибка при загрузке индивидуальных студентов: " + error);
+    }
+}
+
+// Функция для отображения индивидуальных студентов
+function displayIndividualStudents(individualStudents) {
+    const individualList = document.getElementById('individualStudentsList');
+    const individualCount = document.getElementById('individualCount');
+    
+    if (!individualList) return;
+    
+    individualCount.textContent = individualStudents.length;
+    
+    if (individualStudents.length === 0) {
+        individualList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🎓</div>
+                <h3>Нет индивидуальных студентов</h3>
+                <p>Студенты из групп менее 5 человек будут переведены на индивидуальное обучение</p>
+            </div>
+        `;
+        return;
+    }
+    
+    individualList.innerHTML = individualStudents.map(student => `
+        <div class="individual-student-card">
+            <div class="student-avatar">${student.name ? student.name.charAt(0).toUpperCase() : '?'}</div>
+            <div class="student-info">
+                <div class="student-name">${student.name || 'Неизвестный'}</div>
+                <div class="student-languages">
+                    ${student.languages ? student.languages.map(lang => 
+                        `<span class="language-tag">${lang.language} (Ур. ${lang.level}) - ${lang.price}₽</span>`
+                    ).join('') : ''}
+                </div>
+                <div class="student-meta">
+                    <span class="total-price">Всего: ${student.total_price || 0}₽</span>
+                    ${student.languages && student.languages[0] ? 
+                        `<span class="periods-left">${student.languages[0].periods_left} периодов осталось</span>` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Обновим loadLanguages чтобы загружать и индивидуальных студентов
+async function loadLanguages() {
+    try {
+        const response = await fetch('/groups');
+        const data = await response.json();
+        languagesData = data.groups || [];
+        displayLanguages(languagesData);
+        
+        // Загружаем индивидуальных студентов
+        await loadIndividualStudents();
+    } catch (error) {
+        addToOutput("❌ Ошибка при загрузке групп: " + error);
     }
 }
 
@@ -331,11 +410,13 @@ function displayLanguages(groups) {
 
     // Группируем по языкам
     const languagesMap = {};
-    groups.forEach(group => {
+    groups.forEach((group, index) => {
         const lang = group.language || 'Unknown';
         if (!languagesMap[lang]) {
             languagesMap[lang] = [];
         }
+        // Добавляем уникальный идентификатор группы
+        group.uniqueId = `${lang}-${group.level}-${group.intensity_name}-${index}`;
         languagesMap[lang].push(group);
     });
 
@@ -371,18 +452,23 @@ function displayLanguages(groups) {
                             Math.round(groupRevenue / group.students.length) : 0;
                             
                         return `
-                        <div class="group-item" onclick="showGroupDetails('${language}', ${group.level}, '${group.intensity_name}')">
+                        <div class="group-item" onclick="showGroupDetails('${group.uniqueId}')">
                             <div class="group-info">
                                 <div>
                                     <div class="group-level">Уровень ${group.level || 1}</div>
                                     <div class="group-intensity">
-                                        ${group.intensity_name || 'Unknown'} (${group.periods_left || 1} периодов осталось)
+                                        ${group.intensity_name || 'Unknown'} 
+                                        <div style="color: var(--text-secondary); font-size: 0.8em; margin-top: 2px;">
+                                            ${group.periods_left || 1} периодов всего
+                                        </div>
                                         <div style="color: var(--success); font-size: 0.8em; margin-top: 2px;">
                                             💰 ${avgPrice} ₽/студ
                                         </div>
                                     </div>
                                 </div>
-                                <div class="group-students-count">${group.students?.length || 0}</div>
+                                <div class="group-students-count">
+                                    <span class="student-count">${group.students?.length || 0}</span>
+                                </div>
                             </div>
                         </div>
                     `}).join('')}
@@ -394,12 +480,12 @@ function displayLanguages(groups) {
 
 function getLanguageFlag(language) {
     const flags = {
-        'English': 'EN',
-        'Spanish': 'ES', 
-        'French': 'FR',
-        'German': 'DE',
-        'Chinese': 'CN',
-        'Arabian': 'AR'
+        'English': '🇬🇧',
+        'Spanish': '🇪🇸', 
+        'French': '🇫🇷',
+        'German': '🇩🇪',
+        'Chinese': '🇨🇳',
+        'Arabian': '🇸🇦'
     };
     return flags[language] || '🌍';
 }
@@ -412,34 +498,42 @@ function toggleLanguage(language) {
     toggle.classList.toggle('expanded');
 }
 
-function showGroupDetails(language, level, intensityName) {
-    const group = languagesData.find(g => 
-        g.language === language && 
-        g.level === level && 
-        g.intensity_name === intensityName
-    );
+function showGroupDetails(uniqueId) {
+    const group = languagesData.find(g => g.uniqueId === uniqueId);
 
     if (!group) return;
 
+    // Снимаем выделение со всех групп
     document.querySelectorAll('.group-item').forEach(item => {
         item.classList.remove('active');
     });
 
+    // Выделяем выбранную группу
     event.target.closest('.group-item').classList.add('active');
 
     const details = document.getElementById('groupDetails');
+    const totalRevenue = (group.students || []).reduce((sum, student) => sum + (student.price || 0), 0);
+    const avgPrice = group.students?.length ? Math.round(totalRevenue / group.students.length) : 0;
+
     details.innerHTML = `
         <div class="details-card">
             <div class="details-header">
                 <div class="details-title">
-                    ${getLanguageFlag(language)} ${language} - Уровень ${level}
+                    ${getLanguageFlag(group.language)} ${group.language} - Уровень ${group.level}
+                </div>
+                <div class="details-subtitle">
+                    ${group.intensity_name} • ${group.students?.length || 0} студентов
                 </div>
             </div>
             
             <div class="details-meta">
                 <div class="meta-item">
                     <div class="meta-label">Интенсивность</div>
-                    <div class="meta-value">${intensityName} (${group.periods_left || 1} периодов всего)</div>
+                    <div class="meta-value">${group.intensity_name}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Периоды обучения</div>
+                    <div class="meta-value">${group.periods_left || 1} всего</div>
                 </div>
                 <div class="meta-item">
                     <div class="meta-label">Количество студентов</div>
@@ -447,12 +541,16 @@ function showGroupDetails(language, level, intensityName) {
                 </div>
                 <div class="meta-item">
                     <div class="meta-label">Средняя цена</div>
-                    <div class="meta-value">${calculateAveragePrice(group.students)} ₽</div>
+                    <div class="meta-value">${avgPrice} ₽</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Общий доход</div>
+                    <div class="meta-value">${totalRevenue} ₽</div>
                 </div>
             </div>
 
             <div class="students-section">
-                <h4>👥 Студенты в группе</h4>
+                <h4>👥 Студенты в группе (${group.students?.length || 0})</h4>
                 <div class="students-grid">
                     ${(group.students || []).map(student => `
                         <div class="student-card">
@@ -461,11 +559,9 @@ function showGroupDetails(language, level, intensityName) {
                             </div>
                             <div class="student-info">
                                 <div class="student-name">${student.name || 'Неизвестный'}</div>
-                                <div class="student-languages">
-                                    <span>Цена: ${student.price || 0} ₽</span>
-                                    <span style="margin-left: 10px; color: var(--success);">
-                                        ${student.student_periods_left || 0} периодов осталось
-                                    </span>
+                                <div class="student-details">
+                                    <span class="price">${student.price || 0} ₽</span>
+                                    <span class="periods">${student.student_periods_left || 0} периодов осталось</span>
                                 </div>
                             </div>
                         </div>
@@ -475,7 +571,7 @@ function showGroupDetails(language, level, intensityName) {
         </div>
     `;
 
-    addToOutput(`📖 Открыта группа: ${language} - Уровень ${level}`);
+    addToOutput(`📖 Открыта группа: ${group.language} - Уровень ${group.level} (${group.intensity_name})`);
 }
 
 function calculateAveragePrice(students) {
