@@ -16,6 +16,7 @@ public:
     const std::vector<std::unique_ptr<Language>>& get_languages() const;
     void delete_language(int index);
     bool is_individual() const;
+    void to_individual();
     void is_graduate(GroupManager& manager);
     void change_intensity(GroupManager& manager);
     ~Student() = default;

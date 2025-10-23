@@ -50,8 +50,11 @@ void step(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students
     }
 
     
-    rand_leave(manager, students);
+    rand_leave(manager, students, individual_students);
     rand_add(manager, students, individual_students);
     manager.to_individual(students, individual_students);
-    manager.print_all();
+
+    for (auto& student: individual_students){
+        student->to_individual();
+    }
 }

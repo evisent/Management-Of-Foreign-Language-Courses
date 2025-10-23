@@ -57,14 +57,14 @@ std::vector<std::unique_ptr<Language>> rand_languages(){
     std::vector<std::unique_ptr<Language>> languages;
     languages.push_back(rand_language());
     
-    if (chance > 100) {  // 2 языка (15%)
+    if (chance >= 100) {  // 2 языка (15%)
         std::unique_ptr<Language> language2 = rand_language();
         while (language2->get_name() == languages[0]->get_name()) {
             language2 = rand_language();
         }
         languages.push_back(std::move(language2));
     } 
-    else if (chance >= 101) {  // 3 языка (5%)
+    else if (chance >= 100) {  // 3 языка (5%)
         std::unique_ptr<Language> language2 = rand_language();
         while (language2->get_name() == languages[0]->get_name()) {
             language2 = rand_language();
@@ -86,31 +86,6 @@ std::unique_ptr<Student> rand_student(){
     return std::make_unique<Student>(rand_name(), rand_languages());
 }
 
-
-void rand_leave(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students){
-    int chance = my_rand() % 100;
-
-    if (chance < 5 && !students.empty()){
-        std::cout << "STUDENT LEAVED\n";
-        int rand_student = my_rand() % students.size();
-
-        Student& student = *students[rand_student];
-        
-        const auto& languages = student.get_languages();
-        
-        int rand_language = my_rand() % languages.size();
-        std::string language_name = languages[rand_language]->get_name();
-        
-        manager.delete_student(student, language_name);
-        
-        if (languages.size() == 1){
-            students.erase(students.begin() + rand_student);
-        } else {
-            students[rand_student]->delete_language(rand_language);
-        }
-    }
-}
-
 std::unique_ptr<Language> create_language(const std::string& name, int level, const Intensity& intensity) {
     if (name == "English") return std::make_unique<English>(level, intensity);
     else if (name == "Spanish") return std::make_unique<Spanish>(level, intensity);
@@ -121,12 +96,10 @@ std::unique_ptr<Language> create_language(const std::string& name, int level, co
     else return std::make_unique<English>(level, intensity);
 }
 
-
 void rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, std::vector<std::unique_ptr<Student>>& individual_students){
     if (students.size() + individual_students.size() >= 30) {
         return;
     }
-
     int available_slots = 30 - students.size() - individual_students.size();
     
     int amount = my_rand() % 100;
@@ -157,7 +130,7 @@ void rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& stud
             for (const auto& language: new_student->get_languages()){
                 if(manager.is_small(language)){
                     individual_students.push_back(std::move(new_student));
-                    std::cout << "Individual added\n";
+                    //std::cout << "Individual added\n";
                 } else{
                     if (new_student) {
                         manager.add_student(*new_student);
@@ -171,6 +144,48 @@ void rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& stud
     }
     
 }  
+
+void rand_leave(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, std::vector<std::unique_ptr<Student>>& individual_students){
+    int chance = my_rand() % 100;
+
+    if (chance < 5 && !students.empty()){
+        std::cout << "STUDENT LEAVED\n";
+
+        int rand_student = my_rand() % students.size();
+
+        Student& student = *students[rand_student];
+        
+        const auto& languages = student.get_languages();
+        
+        int rand_language = my_rand() % languages.size();
+        std::string language_name = languages[rand_language]->get_name();
+        
+        manager.delete_student(student, language_name);
+        
+        if (languages.size() == 1){
+            students.erase(students.begin() + rand_student);
+        } else {
+            students[rand_student]->delete_language(rand_language);
+        }
+    }
+    if (chance >= 5 && chance < 15 && !individual_students.empty()){
+        std::cout << "INDIVIDUAL STUDENT LEAVED\n";
+        int rand_student = my_rand() % individual_students.size();
+
+        Student& student = *individual_students[rand_student];
+        
+        const auto& languages = student.get_languages();
+        
+        int rand_language = my_rand() % languages.size();
+        std::string language_name = languages[rand_language]->get_name();
+                
+        if (languages.size() == 1){
+            individual_students.erase(individual_students.begin() + rand_student);
+        } else {
+            individual_students[rand_student]->delete_language(rand_language);
+        }
+    }
+}
 
 std::vector<std::unique_ptr<Student>> fifteen_students(){
     std::vector<std::unique_ptr<Student>> students;

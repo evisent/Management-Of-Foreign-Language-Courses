@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <unordered_set>
 #include <memory>
 #include <algorithm>
 

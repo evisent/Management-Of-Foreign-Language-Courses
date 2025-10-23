@@ -11,39 +11,23 @@ void GroupManager::add_student(Student& student){
 }
 
 void GroupManager::delete_student(Student& student, const std::string& language_name) {
-    auto lang_it = groups.find(language_name);
-    if (lang_it == groups.end()) return;
-    
-    auto& levels = lang_it->second;
-    for (auto level_it = levels.begin(); level_it != levels.end(); ) {
-        auto& intensities = level_it->second;
-        for (auto intensity_it = intensities.begin(); intensity_it != intensities.end(); ) {
-            auto& students_vec = intensity_it->second;
-            auto student_it = std::find(students_vec.begin(), students_vec.end(), &student);
-            
-            if (student_it != students_vec.end()) {
-                students_vec.erase(student_it);
-                std::cout << "DEBUG: Deleted " << student.get_name() 
-                          << " from " << language_name << " L" << level_it->first 
-                          << " " << intensity_it->first.get_type() << std::endl;
-            }
-            
-            if (students_vec.empty()) {
-                intensity_it = intensities.erase(intensity_it);
-            } else {
-                ++intensity_it;
+    auto& levels = groups[language_name];
+    for (auto& [level, intensities] : levels) {
+        for (auto& [intensity, students] : intensities) {
+            auto it = std::find(students.begin(), students.end(), &student);
+            if (it != students.end()) {
+                students.erase(it);
+                
+                if (students.empty()) {
+                    --amount_; 
+                }
+                
+                /*std::cout << "DEBUG: Deleted " << student.get_name() 
+                          << " from " << language_name << " L" << level 
+                          << " " << intensity.get_type() << std::endl;*/
+                return; 
             }
         }
-        
-        if (intensities.empty()) {
-            level_it = levels.erase(level_it);
-        } else {
-            ++level_it;
-        }
-    }
-    
-    if (levels.empty()) {
-        groups.erase(lang_it);
     }
 }
 
@@ -89,6 +73,7 @@ void GroupManager::to_individual(std::vector<std::unique_ptr<Student>>& students
         for (auto& [level, intensities] : levels) {
             for (auto& [intensity, students] : intensities) {
                 if (students.size() < 5 && !students.empty()) {
+                    bool is_add = false;
                     for (Student* student : students) {
                         to_delete.push_back(student);
                         langs.push_back(language);
@@ -96,7 +81,13 @@ void GroupManager::to_individual(std::vector<std::unique_ptr<Student>>& students
                         for (auto& lng: student->get_languages()){
                             languages.push_back(create_language(lng->get_name(), lng->get_level(), lng->get_intensity()));
                         }
-                        individual_students.push_back(std::make_unique<Student>(student->get_name(), std::move(languages), true));
+                        for (int i = 0; i < individual_students.size(); ++i){
+                            if (individual_students[i]->get_name() == student->get_name()) {
+                                is_add = true;
+                            }
+                        }
+                        //std::cout << "ADDED " << student->get_name() << '\n';                      
+                        if (!is_add) individual_students.push_back(std::make_unique<Student>(student->get_name(), std::move(languages), true));
                     }
                 }
             }
@@ -107,6 +98,14 @@ void GroupManager::to_individual(std::vector<std::unique_ptr<Student>>& students
         delete_student(*to_delete[i], langs[i]);
     }
 
+    for (int i = 0; i < individual_students.size(); ++i){
+        for (int j = 0; j < students_vec.size(); ++j){
+            if (individual_students[i]->get_name() == students_vec[j]->get_name()){
+                students_vec.erase(students_vec.begin() + j);
+                break;
+            }
+        }
+    }
 }
 
 void GroupManager::print_all() const {
@@ -192,3 +191,5 @@ void GroupManager::reset() {
     groups.clear();  
     amount_ = 0;
 }
+
+

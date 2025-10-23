@@ -579,7 +579,6 @@ async function loadIndividualStudents() {
     }
 }
 
-// Отображение индивидуальных студентов
 function displayIndividualStudents(students) {
     const list = document.getElementById('individualList');
     
@@ -611,19 +610,34 @@ function displayIndividualStudents(students) {
                 
                 <div class="student-languages-individual">
                     <strong>Изучаемые языки:</strong>
-                    ${(student.languages || []).map(lang => `
+                    ${(student.languages || []).map(lang => {
+                        const periodsLeft = lang.periods_left || 0;
+                        const totalPeriods = lang.total_periods || 0;
+                        const intensityName = getIntensityName(totalPeriods);
+                        
+                        return `
                         <div class="language-tag">
                             ${lang.name || 'Unknown'} 
                             (Ур. ${lang.level || 1}) 
-                            - ${lang.periods_left || 0} периодов
+                            - ${periodsLeft} из ${totalPeriods} периодов
                             <br>
-                            <small>${lang.price || 0} ₽</small>
+                            <small>${intensityName} • ${lang.price || 0} ₽</small>
                         </div>
-                    `).join('')}
+                    `}).join('')}
                 </div>
             </div>
         `;
     }).join('');
+}
+
+// Функция для получения названия интенсивности
+function getIntensityName(totalPeriods) {
+    switch(totalPeriods) {
+        case 3: return 'Интенсив';
+        case 4: return 'Обычный';
+        case 6: return 'Поддерживающее обучение';
+        default: return `${totalPeriods} периодов`;
+    }
 }
 
 
@@ -656,7 +670,10 @@ function updateUI() {
     document.getElementById('studentsCount').textContent = stateData.students_count || 0;
     document.getElementById('groupsCount').textContent = stateData.groups_count || 0;
     document.getElementById('individualCount').textContent = stateData.individual_count || 0;
-    
+    document.getElementById('profit').textContent = (stateData.profit || 0) + ' ₽';
+    document.getElementById('total').textContent = (stateData.total || 0) + ' ₽';
+    document.getElementById('curPeriod').textContent = (stateData.cur_period || 0);
+
     if (document.getElementById('individual-tab').classList.contains('active')) {
         loadIndividualStudents();
     }

@@ -42,6 +42,13 @@ bool Student::is_individual() const {
     return individual_;
 }
 
+void Student::to_individual(){
+    individual_ = true;
+    for (auto& language : languages_) {
+        language->set_individual_price();
+    }
+}
+
 void Student::is_graduate(GroupManager& manager) {
     std::vector<int> languages_to_remove;
     

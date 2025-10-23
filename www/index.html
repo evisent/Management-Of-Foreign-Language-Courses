@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Managment Of Foreign Language Courses</title>
+    <title>Курсы иностранного языка</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -51,19 +51,27 @@
 
 
         <div class="app-container">
-        <!-- Вкладки -->
         <div class="tabs">
-            <button class="tab-button active" onclick="openTab('groups')">Группы</button>
-            <button class="tab-button" onclick="openTab('individual')">Индивидуальные студенты</button>
-            <button class="tab-button" onclick="openTab('journal')">Журнал</button>
+            <button class="tab-button active" onclick="openTab('groups')">
+                <span class="tab-icon">📚</span>
+                Группы
+            </button>
+            <button class="tab-button" onclick="openTab('individual')">
+                <span class="tab-icon">🎯</span>
+                Индивидуальные
+            </button>
+            <button class="tab-button" onclick="openTab('journal')">
+                <span class="tab-icon">📋</span>
+                Журнал
+            </button>
         </div>
 
         <!-- Левая панель -->
         <div class="left-panel">
             <header class="header">
                 <div class="header-content">
-                    <h1>🎓 Managment Of Foreign Language Courses</h1>
-                    <p>Model of system</p>
+                    <h1>🎓 Курсы иностранного языка</h1>
+                    <p>Моделирование</p>
                 </div>
             </header>
 
@@ -90,6 +98,27 @@
                             <div class="stat-label">Индивидуальных</div>
                         </div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="profit">0 ₽</div>
+                            <div class="stat-label">Прибыль за период</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="total">0 ₽</div>
+                            <div class="stat-label">Общая прибыль</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"></div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="curPeriod">0</div>
+                            <div class="stat-label">Прошло периодов</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="action-panel">
@@ -98,14 +127,10 @@
                         <button class="btn btn-primary" onclick="createStudent()">
                             <span class="btn-icon">➕</span>
                             Следующий шаг
-                        </button>
-                        <button class="btn btn-warning" onclick="deleteStudent()">
-                            <span class="btn-icon">➖</span>
-                            Удалить студента
-                        </button>               
+                        </button>                                  
                         <button class="btn btn-danger" onclick="resetSchool()">
                             <span class="btn-icon">🗑️</span>
-                            Очистить всё
+                            Сброс системы
                         </button>
                     </div>
                 </div>  
