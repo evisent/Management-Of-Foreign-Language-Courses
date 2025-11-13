@@ -1,6 +1,7 @@
 #include <chrono> 
 #include <random>
 #include <string>
+#include <climits>
 #include "names.h"
 #include "student.h"
 #include "languages.h"

@@ -1,3 +1,4 @@
+#include <climits>
 #include "group_manager.h"
 #include "student.h"
 #include "json_utils.h"
