@@ -1,7 +1,17 @@
 #include "group_manager.h"
 #include "student.h"
 #include "json_utils.h"
-#include "randoms.h"
+
+std::unique_ptr<Language> GroupManager::create_language(const std::string& name, int level, const Intensity& intensity) {
+    if (name == "English") return std::make_unique<English>(level, intensity);
+    else if (name == "Spanish") return std::make_unique<Spanish>(level, intensity);
+    else if (name == "French") return std::make_unique<French>(level, intensity);
+    else if (name == "German") return std::make_unique<German>(level, intensity);
+    else if (name == "Chinese") return std::make_unique<Chinese>(level, intensity);
+    else if (name == "Arabian") return std::make_unique<Arabian>(level, intensity);
+    else return std::make_unique<English>(level, intensity);
+}
+
 
 void GroupManager::add_student(Student& student){
     for (const auto& language : student.get_languages()) {

@@ -1,6 +1,5 @@
 #include "httplib.h"
 #include "group_manager.h"
-#include "randoms.h"
 #include "json_utils.h"
 #include "intensity.h"
 #include "student.h"
@@ -8,7 +7,7 @@
 #include "step.h"
 #include <vector>
 #include <memory>
-
+#include "simulation.h"
 
 GroupManager manager;
 std::vector<std::unique_ptr<Student>> students;
@@ -48,6 +47,9 @@ int profit(const std::vector<std::unique_ptr<Student>>& students){
 }
 
 int main() {
+
+    Simulator simulator;
+
     httplib::Server server;
 
     server.set_default_headers({
@@ -142,8 +144,8 @@ int main() {
         res.set_content(json_body, "application/json; charset=utf-8");
     });
 
-    server.Post("/step", [](const httplib::Request& req, httplib::Response& res) {
-        step(manager, students, individual_students);
+    server.Post("/step", [&](const httplib::Request& req, httplib::Response& res) {
+        simulator.step(manager, students, individual_students);
         //std::cout << NAMES.size() << '\n';
         total_earned += profit(students) + profit(individual_students);
         cur_period++;

@@ -20,6 +20,7 @@ public:
     
     std::vector<Student*> get_unique_students() const;
 
+    std::unique_ptr<Language> create_language(const std::string& name, int level, const Intensity& intensity);
     void print_all() const;
     bool is_small(const std::unique_ptr<Language>& language);
     void to_individual(std::vector<std::unique_ptr<Student>>& students, std::vector<std::unique_ptr<Student>>& individual_students);

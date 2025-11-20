@@ -13,6 +13,7 @@ public:
     Student(const std::string& name, std::vector <std::unique_ptr<Language>> languages, bool individual);
     std::string get_name() const;
     void get_info() const;
+    std::unique_ptr<Language> create_language(const std::string& name, int level, const Intensity& intensity);
     const std::vector<std::unique_ptr<Language>>& get_languages() const;
     void delete_language(int index);
     bool is_individual() const;

@@ -10,6 +10,7 @@ add_executable(Languages
     src/intensity.cpp
     src/group_manager.cpp
     src/randoms.cpp
+    src/simulation.cpp
 )
 
 if(WIN32)

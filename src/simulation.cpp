@@ -6,22 +6,77 @@
 #include "languages.h"
 #include "intensity.h"
 #include "group_manager.h"
+#include "simulation.h"
 
-int my_rand() {
+void Simulator::step(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, 
+    std::vector<std::unique_ptr<Student>>& individual_students){
+
+    for (int i = 0; i < students.size(); ++i) {
+        students[i]->change_intensity(manager);
+    }
+
+    for (int i = 0; i < individual_students.size(); ++i) {
+        individual_students[i]->change_intensity(manager);
+    }
+    
+    for (int i = 0; i < students.size(); ++i) {
+        students[i]->is_graduate(manager);
+    }
+
+    for (int i = 0; i < individual_students.size(); ++i) {
+        individual_students[i]->is_graduate(manager);
+    }
+    
+    std::vector<int> empty_students;
+    for (int i = 0; i < students.size(); ++i) {
+        if (students[i]->get_languages().empty()) {
+            empty_students.push_back(i);
+        }
+    }
+    
+    for (int i = empty_students.size() - 1; i >= 0; --i) {
+        int index = empty_students[i];
+        students.erase(students.begin() + index);
+    }
+
+    std::vector<int> empty_individual_students;
+    for (int i = 0; i < individual_students.size(); ++i) {
+        if (individual_students[i]->get_languages().empty()) {
+            empty_individual_students.push_back(i);
+        }
+    }
+    
+    for (int i = empty_individual_students.size() - 1; i >= 0; --i) {
+        int index = empty_individual_students[i];
+        individual_students.erase(individual_students.begin() + index);
+    }
+
+    
+    rand_leave(manager, students, individual_students);
+    rand_add(manager, students, individual_students);
+    manager.to_individual(students, individual_students);
+
+    for (auto& student: individual_students){
+        student->to_individual();
+    }
+}
+
+
+int Simulator::my_rand() {
     std::random_device rd;
     std::mt19937 rng(rd());  
     std::uniform_int_distribution<int> dist(1, INT_MAX);
     return dist(rng);
 }
 
-std::string rand_name(){
+std::string Simulator::rand_name(){
     int index = my_rand() % NAMES.size();
     std::string name = NAMES[index];
     NAMES.erase(NAMES.begin() + index);
     return name;
 }
 
-int rand_level(){
+int Simulator::rand_level(){
     int level = my_rand() % 100;
     if (level < 40){            // 40%
         return 1;
@@ -32,7 +87,7 @@ int rand_level(){
     }
 }
 
-Intensity rand_intensity(){
+Intensity Simulator::rand_intensity(){
     int intensity = my_rand() % 100;
 
     if (intensity < 35){         // 35%
@@ -44,7 +99,7 @@ Intensity rand_intensity(){
     }
 }
 
-std::unique_ptr<Language> rand_language(){
+std::unique_ptr<Language> Simulator::rand_language(){
     int language = my_rand() % 4;  
     switch(language) {
         case 0: return std::make_unique<English>(rand_level(), rand_intensity());
@@ -55,7 +110,7 @@ std::unique_ptr<Language> rand_language(){
     }
 }
 
-std::vector<std::unique_ptr<Language>> rand_languages(){
+std::vector<std::unique_ptr<Language>> Simulator::rand_languages(){
     int chance = my_rand() % 100; 
     std::vector<std::unique_ptr<Language>> languages;
     languages.push_back(rand_language());
@@ -85,11 +140,11 @@ std::vector<std::unique_ptr<Language>> rand_languages(){
     return languages;
 }                                                            
 
-std::unique_ptr<Student> rand_student(){
+std::unique_ptr<Student> Simulator::rand_student(){
     return std::make_unique<Student>(rand_name(), rand_languages());
 }
 
-std::unique_ptr<Language> create_language(const std::string& name, int level, const Intensity& intensity) {
+std::unique_ptr<Language> Simulator::create_language(const std::string& name, int level, const Intensity& intensity) {
     if (name == "English") return std::make_unique<English>(level, intensity);
     else if (name == "Spanish") return std::make_unique<Spanish>(level, intensity);
     else if (name == "French") return std::make_unique<French>(level, intensity);
@@ -99,7 +154,7 @@ std::unique_ptr<Language> create_language(const std::string& name, int level, co
     else return std::make_unique<English>(level, intensity);
 }
 
-void rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, std::vector<std::unique_ptr<Student>>& individual_students){
+void Simulator::rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, std::vector<std::unique_ptr<Student>>& individual_students){
     if (students.size() + individual_students.size() >= 30) {
         return;
     }
@@ -148,7 +203,7 @@ void rand_add(GroupManager& manager, std::vector<std::unique_ptr<Student>>& stud
     
 }  
 
-void rand_leave(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, std::vector<std::unique_ptr<Student>>& individual_students){
+void Simulator::rand_leave(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, std::vector<std::unique_ptr<Student>>& individual_students){
     int chance = my_rand() % 100;
     
     if (chance > 5 || students.empty()){
@@ -210,7 +265,7 @@ void rand_leave(GroupManager& manager, std::vector<std::unique_ptr<Student>>& st
     }
 }
 
-std::vector<std::unique_ptr<Student>> fifteen_students(){
+std::vector<std::unique_ptr<Student>> Simulator::fifteen_students(){
     std::vector<std::unique_ptr<Student>> students;
     
     std::string first_lang_name, second_lang_name, third_lang_name;
