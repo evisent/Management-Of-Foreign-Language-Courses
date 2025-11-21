@@ -9,9 +9,10 @@ add_executable(Languages
     src/languages.cpp
     src/intensity.cpp
     src/group_manager.cpp
-    src/randoms.cpp
     src/simulation.cpp
 )
+
+add_definitions(-D_WIN32_WINNT=0x0A00)
 
 if(WIN32)
     target_link_libraries(Languages ws2_32 wsock32)

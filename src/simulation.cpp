@@ -8,6 +8,14 @@
 #include "group_manager.h"
 #include "simulation.h"
 
+GroupManager manager;
+std::vector<std::unique_ptr<Student>> students;
+std::vector<std::unique_ptr<Student>> individual_students;
+std::vector<std::string> NAMESCOPY = NAMES;
+int total_earned = 0;
+int cur_period = 0;
+int total_profit = 0;
+
 void Simulator::step(GroupManager& manager, std::vector<std::unique_ptr<Student>>& students, 
     std::vector<std::unique_ptr<Student>>& individual_students){
 
